@@ -10,7 +10,8 @@ on:
 jobs:
   docs:
     runs-on: ubuntu-latest
-
+    permissions:
+      pull-requests: write
     steps:
       - uses: actions/checkout@v3
         with:
@@ -34,8 +35,6 @@ jobs:
       # @see https://github.com/crazy-max/ghaction-github-pages
       - name: Deploy to GitHub Pages
         uses: crazy-max/ghaction-github-pages@v2
-        permissions:
-          pull-requests: write
         with:
           # 部署到 gh-pages 分支
           target_branch: gh-pages
