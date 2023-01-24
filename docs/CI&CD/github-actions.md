@@ -121,3 +121,36 @@ jobs:
       - run: echo "finish"
 ```
 
+## 基础操作
+
+### 使用 Actions
+
+在 [了解 GitHub  Actions 文件](/CI&CD/github-actions.md#了解-github-actions-文件) 中， name 为 `Check out repository code` 的 step 使用了 `actions/checkout@v3` 这个 actions 来帮助 checkout 当前仓库的代码，省去了写大量脚本的功夫。
+
+#### 从市场中获取 Actions
+
+可以在 [GitHub Marketplace](https://github.com/marketplace?type=actions) 找到更多的 Actions 来找简化部署 YAML 文件。
+
+此外，支持从同一仓库、其他仓库中引入 Actions，支持从 Docker Hub 上引用容器，如何自定义和使用自定义 Actions，请参考 [Finding and customizing actions - GitHub Docs](https://docs.github.com/en/actions/learn-github-actions/finding-and-customizing-actions)。
+
+#### Actions 的基本使用
+
+```yaml{6-10}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v2
+        with:
+          java-version: '8'
+          cache: 'maven'
+          distribution: 'temurin'
+```
+
+如上，使用了托管在 GitHub 的 actions `actions/setup-java@v2` ，帮我们在环境上安装了 JDK1.8+Maven。
+
+仓库地址为 `https://github.com/`+`actions/setup-java`，使用的版本为 `v2`，并用 `with` 传入 `java-version`、`cache`、`distribution` 三个参数。
+
+
+
