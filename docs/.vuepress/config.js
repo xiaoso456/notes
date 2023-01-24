@@ -5,6 +5,12 @@ export default defineUserConfig({
     lang: 'zh-CN',
     title: 'xiaoso知识文档',
     base: 'notes',
+    head:[
+        [
+            // logo
+            'link', { rel: 'icon', href: '/img/logo.svg' }
+        ],
+    ],
     description: 'xiaoso知识文档',
     plugins: [
         // 搜索插件
