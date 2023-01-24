@@ -33,8 +33,13 @@ export default defineUserConfig({
         // 侧边栏最大深度，到h3标题
         sidebarDepth: 2,
         subSidebar: 'auto',
-        editLink: true,
         lastUpdated:true,
+
+        // 在 github等版本管理仓库上编辑此页 link
+        editLink: true,
+        repo: 'xiao-so/notes',
+        docsBranch: 'main',
+        docsDir: 'docs',
 
 
     }),
