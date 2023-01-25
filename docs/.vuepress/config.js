@@ -1,6 +1,7 @@
 import {defaultTheme, defineUserConfig, viteBundler} from 'vuepress'
 import {searchPlugin} from "@vuepress/plugin-search";
 import { ref } from 'vue'
+import {googleAnalyticsPlugin} from "@vuepress/plugin-google-analytics";
 
 const base = "/notes"
 export default defineUserConfig({
@@ -18,7 +19,10 @@ export default defineUserConfig({
         // 搜索插件
         searchPlugin({
             // 搜索框显示文字
-            placeholder: "搜索"
+            placeholder: '搜索'
+        }),
+        googleAnalyticsPlugin({
+            id: 'G-C2XKVMR51B'
         }),
     ],
     // 打包配置
@@ -41,10 +45,20 @@ export default defineUserConfig({
         // 侧边栏最大深度，到h3标题
         sidebarDepth: 2,
         subSidebar: 'auto',
-        lastUpdated:true,
 
-        // 在 github等版本管理仓库上编辑此页 link
+        // 底边栏
+        lastUpdated: true,
+        lastUpdatedText: '最后更新',
+        contributors: true,
+        contributorsText: '贡献者',
         editLink: true,
+        editLinkText: '编辑此页',
+
+        // 容器默认标题
+        tip: '提示',
+        warning: '注意',
+        danger: '警告',
+
         repo: 'xiao-so/notes',
         docsBranch: 'main',
         docsDir: 'docs',
