@@ -15,7 +15,7 @@ export default defineUserConfig({
     plugins: [
         // 搜索插件
         searchPlugin({
-            // 配置项
+            // 搜索框显示文字
             placeholder: "搜索"
         }),
     ],
