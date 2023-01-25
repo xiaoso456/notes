@@ -2,14 +2,15 @@ import {defaultTheme, defineUserConfig, viteBundler} from 'vuepress'
 import {searchPlugin} from "@vuepress/plugin-search";
 import { ref } from 'vue'
 
+const base = "/notes"
 export default defineUserConfig({
     lang: 'zh-CN',
     title: 'xiaoso知识文档',
-    base: '/notes/',
+    base: base + "/",
     head:[
         [
             // logo
-            'link', { rel: 'icon', href: ref('/img/logo.svg') }
+            'link', { rel: 'icon', href: base +'/img/logo.svg' }
         ],
     ],
     description: 'xiaoso知识文档',
