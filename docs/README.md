@@ -12,5 +12,3 @@ features:
   details: 关注常用实用内容。
 
 ---
-
-<p align="center">aaa</p>
