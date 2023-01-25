@@ -14,7 +14,7 @@ author: 'xiaoso'
 
 ## 快速开始
 
-1. 创建 `.github/workflows` 目录
+1. 在 GitHub 仓库下创建 `.github/workflows` 目录
 2. 在目录下创建一个 `github-actions-demo.yml` 文件
 3. 修改文件内容
 ```yaml{2}
