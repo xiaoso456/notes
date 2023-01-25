@@ -158,7 +158,9 @@ on:
 
 ### 使用 Actions
 
-在 [了解 GitHub  Actions 文件](/CI&CD/github-actions.md#了解-github-actions-文件) 中， name 为 `Check out repository code` 的 step 使用了 `actions/checkout@v3` 这个 actions 来帮助 checkout 当前仓库的代码，省去了写大量脚本的功夫。
+使用已经定义好的 Actions 可以省去大量写脚本的时间，只需要输入一些简单参数就可以完成 checkout 仓库代码、安装 Java 环境等操作。
+
+例如，在 [了解 GitHub  Actions 文件](/CI&CD/github-actions.md#了解-github-actions-文件) 中， name 为 `Check out repository code` 的 step 使用了 `actions/checkout@v3` 这个 actions 来帮助 checkout 当前仓库的代码，省去了写大量脚本的功夫。
 
 #### 从市场中获取 Actions
 
@@ -367,7 +369,7 @@ GitHub 提供一组内置的函数，可用于表达式，通常这些函数会�
 >
 > [xiao-so/github-actions-demo at quick-start-ci](https://github.com/xiao-so/github-actions-demo/tree/quick-start-ci)
 
-`github-maven.yml` 文件如下
+打包一个 Maven 项目，并把 jar 包推送到仓库的 Releases， `github-maven.yml` 文件如下
 ::: details 详细文件内容
 
 ```yaml
