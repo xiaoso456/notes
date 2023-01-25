@@ -1,6 +1,9 @@
-<p align="center">
-  <img alt="https://xiao-so.github.io/notes/" src="https://img.shields.io/badge/xiaoso-%F0%9F%8E%89%E5%9C%A8%E7%BA%BF%E9%98%85%E8%AF%BB-brightgreen"/>
-</p>
+<div style="text-align: center">
+  <a href="https://xiao-so.github.io/notes/">
+    <img alt="view online" src="https://img.shields.io/badge/xiaoso%E7%9F%A5%E8%AF%86%E5%BA%93-%E5%9C%A8%E7%BA%BF%E9%98%85%E8%AF%BB-brightgreen"/>
+  </a>
+</div>
+
 # 简介
 
 使用 vuepress2 搭建的个人笔记项目，主要包括CI/CD、容器、认证授权、Spring等。
