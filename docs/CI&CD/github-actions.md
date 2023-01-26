@@ -11,7 +11,7 @@ author: 'xiaoso'
 
 参考 [GitHub Actions文档 - GitHub Docs](https://docs.github.com/zh/actions)
 
-示例代码仓库 [xiao-so/github-actions-demo](https://github.com/xiao-so/github-actions-demo)
+示例代码仓库 [xiaoso456/github-actions-demo](https://github.com/xiaoso456/github-actions-demo)
 
 ## 快速开始
 
@@ -72,7 +72,7 @@ workflow：在 `./github/workflows` 的每一个文件为一个 workflow。
 
 > 分支：demo-action
 >
-> [demo-action](https://github.com/xiao-so/github-actions-demo/tree/demo-action)
+> [demo-action](https://github.com/xiaoso456/github-actions-demo/tree/demo-action)
 
 GitHub  Actions 文件采用 YAML 语法，文件存放在代码仓库 `.github/workflows/` 文件夹下，可以有任意多个。
 
@@ -368,7 +368,7 @@ GitHub 提供一组内置的函数，可用于表达式，通常这些函数会�
 
 > 分支：quick-start-ci
 >
-> [xiao-so/github-actions-demo at quick-start-ci](https://github.com/xiao-so/github-actions-demo/tree/quick-start-ci)
+> [xiaoso456/github-actions-demo at quick-start-ci](https://github.com/xiaoso456/github-actions-demo/tree/quick-start-ci)
 
 打包一个 Maven 项目，并把 jar 包推送到仓库的 Releases， `github-maven.yml` 文件如下
 ::: details 详细文件内容

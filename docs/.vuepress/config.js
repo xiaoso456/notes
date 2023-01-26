@@ -1,6 +1,5 @@
 import {defaultTheme, defineUserConfig, viteBundler} from 'vuepress'
 import {searchPlugin} from "@vuepress/plugin-search";
-import { ref } from 'vue'
 import {googleAnalyticsPlugin} from "@vuepress/plugin-google-analytics";
 
 const base = "/notes"
@@ -59,7 +58,7 @@ export default defineUserConfig({
         warning: '注意',
         danger: '警告',
 
-        repo: 'xiao-so/notes',
+        repo: 'xiaoso456/notes',
         docsBranch: 'main',
         docsDir: 'docs',
 
