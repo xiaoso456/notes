@@ -39,6 +39,10 @@ export default defineUserConfig({
             {
                 text: 'CI&CD',
                 children: ['/CI&CD/github-actions.md']
+            },
+            {
+                text: '容器云',
+                children: ['/云/docker.md']
             }
         ],
         // 侧边栏最大深度，到h3标题
