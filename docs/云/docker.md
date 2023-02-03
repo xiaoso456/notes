@@ -2,9 +2,9 @@
 
 解决问题：Docker 主要解决应用环境依赖问题，把环境和应用一起打包发布
 
-和VM对比：和虚拟机 VM 相比，Docker 没有内置主操作系统，而是使用守护进程与主操作系统通信，将 Docker 容器和主操作系统隔离
+和 VM 对比：和虚拟机 VM 相比，Docker 没有内置主操作系统，而是使用守护进程与主操作系统通信，将 Docker 容器和主操作系统隔离
 
-docker 镜像（核心4M+运行环境Lib+程序App）小，启动快
+docker 镜像（核心 4M+运行环境 Lib+程序 App）小，启动快
 
 docker 基于 go 语言
 
@@ -49,9 +49,9 @@ docker 基于 go 语言
     sudo yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
    ```
 
-   ​	
+   ​
 
-3. 安装 docker 社区版(ce)、客户端
+3. 安装 docker 社区版 (ce)、客户端
 
    ```bash
     sudo yum install docker-ce docker-ce-cli containerd.io
@@ -115,7 +115,7 @@ docker search mysql
 #### 下载镜像
 
 ```bash
-docker pull <镜像名>[:版本号]
+docker pull <镜像名>[:版本号 ]
 
 例:
 docker pull mysql:5.7
@@ -124,8 +124,8 @@ docker pull mysql:5.7
 #### 删除镜像
 
 ```bash
-# 通过id删除镜像
-docker rmi -f 镜像id 镜像id2 镜像id3
+# 通过 id 删除镜像
+docker rmi -f 镜像 id 镜像 id2 镜像 id3
 
 # 删除全部容器
 docker rmi -f $(docker images -aq)
@@ -140,7 +140,7 @@ docker rmi -f $(docker images -aq)
 ##### 运行容器
 
 ```bash
-docker run <镜像名>[:版本号]
+docker run <镜像名>[:版本号 ]
 例子:
 # 一种测试推荐用法，用完就删，一般用来测试
 docker run -it --rm tomcat:9.0
@@ -149,11 +149,11 @@ docker run -it --rm tomcat:9.0
 | 选项          | 默认 | 描述                                                         |
 | ------------- | ---- | ------------------------------------------------------------ |
 | --name        |      | 给容器起名                                                   |
-| -d            |      | 以后台方式运行，注意因为docker是以守护进程方式运行，发现没有对外提供服务，会自动停止 |
+| -d            |      | 以后台方式运行，注意因为 docker 是以守护进程方式运行，发现没有对外提供服务，会自动停止 |
 | -it /bin/bash |      | 使用交互方式运行，使用 bash                                  |
-| -p            |      | 端口映射，可选两种格式，使用多个参数p可以指定多个端口<br/>1.主机端口:容器端口 <br/>2.容器端口 |
+| -p            |      | 端口映射，可选两种格式，使用多个参数 p 可以指定多个端口 <br/>1.主机端口:容器端口 <br/>2.容器端口 |
 | -P            |      | 随机指定端口映射                                             |
-| -v            |      | 挂载卷，支持以下格式<br/>1. `主机目录:容器内目录`<br/>2. 具名挂载：`卷名称:容器内目录`<br/>3. 匿名挂载：`容器内目录` |
+| -v            |      | 挂载卷，支持以下格式 <br/>1. `主机目录:容器内目录`<br/>2. 具名挂载：`卷名称:容器内目录`<br/>3. 匿名挂载：`容器内目录` |
 
 ##### 退出容器
 
@@ -169,10 +169,10 @@ docker run -it --rm tomcat:9.0
 ##### 启动和停止容器
 
 ```shell
-docker start <容器id>
-docker restart <容器id>
-docker stop <容器id>
-docker kill <容器id>
+docker start <容器 id>
+docker restart <容器 id>
+docker stop <容器 id>
+docker kill <容器 id>
 ```
 
 ##### 进入当前正在运行的容器
@@ -180,14 +180,14 @@ docker kill <容器id>
 1. 这个方式是进入容器，并使用了新的 bash
 
 ```bash
-docker exec -it <容器id> /bin/bash
-通过/bin/bash命令行
+docker exec -it <容器 id> /bin/bash
+通过/bin/bash 命令行
 ```
 
 2. 这个方式是进入旧的，没有新开 bash
 
 ```bash
-docker attach <容器id>
+docker attach <容器 id>
 ```
 
 ##### 文件拷贝
@@ -195,13 +195,13 @@ docker attach <容器id>
 从容器内拷贝文件到主机上
 
 ```bash
-docker cp <容器id:容器内路径> <目的地主机路径>
+docker cp <容器 id:容器内路径> <目的地主机路径>
 ```
 
 从主机拷贝文件到容器中
 
 ```bash
-docker cp <文件路径> <容器长ID:docker容器中的路径>
+docker cp <文件路径> <容器长 ID:docker 容器中的路径>
 ```
 
 #### 查看容器信息
@@ -219,12 +219,12 @@ docker ps
 ##### 查看容器日志
 
 ```bash
-docker logs <容器id>
+docker logs <容器 id>
 
 -f : 跟踪日志输出
 --since :显示某个开始时间的所有日志
 -t : 显示时间戳
---tail :仅列出最新N条容器日志
+--tail :仅列出最新 N 条容器日志
 ```
 
 
@@ -232,7 +232,7 @@ docker logs <容器id>
 ##### 查看容器中的进程信息
 
 ```bash
-docker top <容器id>
+docker top <容器 id>
 ```
 
 ##### 查看容器内部信息
@@ -240,7 +240,7 @@ docker top <容器id>
 创建信息，参数等等，环境变量等
 
 ```bash
-docker inspect <容器id>
+docker inspect <容器 id>
 ```
 
 ### 导入与导出
@@ -268,7 +268,7 @@ docker export -o <本地路径地址>.tar <容器名>
 #### 导入本地容器生成的镜像
 
 ```bash
-docker import -o <本地路径地址>.tar <镜像名>:[版本号]
+docker import -o <本地路径地址>.tar <镜像名>:[版本号 ]
 ```
 
 #### Docker Save 与 Docker Export
