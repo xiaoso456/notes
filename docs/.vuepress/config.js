@@ -71,8 +71,8 @@ export default defineUserConfig({
                 ]
             }
         ],
-        // 侧边栏最大深度，到h3标题
-        sidebarDepth: 2,
+        // 侧边栏最大深度，到h4标题
+        sidebarDepth: 3,
         subSidebar: 'auto',
 
         // 底边栏
