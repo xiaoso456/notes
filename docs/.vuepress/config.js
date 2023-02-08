@@ -66,13 +66,13 @@ export default defineUserConfig({
                 children: [
                     {
                         text: '证书和HTTPS',
-                        link: '/网络/证书.md'
+                        link: '/网络/证书.md',
                     }
                 ]
             }
         ],
         // 侧边栏最大深度，到h3标题
-        sidebarDepth: 5,
+        sidebarDepth: 2,
         subSidebar: 'auto',
 
         // 底边栏
