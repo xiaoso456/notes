@@ -51,7 +51,7 @@ Dockerfile：构建镜像文本文件
     sudo yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
    ```
 
-   
+
 
 3. 安装 docker 社区版 (ce)、客户端
 
@@ -79,9 +79,9 @@ sudo docker run hello-world
 
 ```json
 {
-    "registry-mirrors": [
-         "xxxxxxx"
-    ]
+   "registry-mirrors": [
+      "xxxxxxx"
+   ]
 }
 ```
 
@@ -133,6 +133,8 @@ docker rmi -f 镜像 id 镜像 id2 镜像 id3
 docker rmi -f $(docker images -aq)
 ```
 
+
+
 ### 容器
 
 容器是镜像的实例化
@@ -148,14 +150,15 @@ docker run <镜像名>[:版本号 ]
 docker run -it --rm tomcat:9.0
 ```
 
-| 选项          | 默认 | 描述                                                         |
-| ------------- | ---- | ------------------------------------------------------------ |
-| --name        |      | 给容器起名                                                   |
-| -d            |      | 以后台方式运行，注意因为 docker 是以守护进程方式运行，发现没有对外提供服务，会自动停止 |
-| -it /bin/bash |      | 使用交互方式运行，使用 bash                                  |
-| -p            |      | 端口映射，可选两种格式，使用多个参数 p 可以指定多个端口 <br/>1.主机端口:容器端口 <br/>2.容器端口 |
-| -P            |      | 随机指定端口映射                                             |
-| -v            |      | 挂载卷，支持以下格式 <br/>1. `主机目录:容器内目录`<br/>2. 具名挂载：`卷名称:容器内目录`<br/>3. 匿名挂载：`容器内目录` |
+| 选项          | 默认           | 描述                                                         |
+| ------------- | -------------- | ------------------------------------------------------------ |
+| --name        |                | 给容器起名                                                   |
+| -d            |                | 以后台方式运行，注意因为 docker 是以守护进程方式运行，发现没有对外提供服务，会自动停止 |
+| -it /bin/bash |                | 使用交互方式运行，使用 bash                                  |
+| -p            |                | 端口映射，可选两种格式，使用多个参数 p 可以指定多个端口 <br/>1.主机端口:容器端口 <br/>2.容器端口 |
+| -P            |                | 随机指定端口映射                                             |
+| -v            |                | 挂载卷，支持以下格式 <br/>1. `主机目录:容器内目录`<br/>2. 具名挂载：`卷名称:容器内目录`<br/>3. 匿名挂载：`容器内目录` |
+| --entrypoint  | 镜像 ENTRYPOINT | 覆盖 ENTRYPOINT                                              |
 
 ##### 退出容器
 
@@ -249,7 +252,7 @@ docker inspect <容器 id>
 
 #### 导出镜像到本地镜像文件
 
-```
+```bash
 docker save -o <本地路径地址>.tar <镜像名>
 ```
 
@@ -263,7 +266,7 @@ docker load -i <本地镜像文件名>
 
 #### 导出容器到本地容器包（镜像）
 
-```
+```bash
 docker export -o <本地路径地址>.tar <容器名>
 ```
 
@@ -335,18 +338,20 @@ docker volume rm <卷名>
 | ---------- | ---- | -------------------- |
 | --force,-f |      | 强制删除一个或多个卷 |
 
-## 制作镜像
+## 制作和发布镜像
 
-制作docker的镜像一般可以使用Dockerfile来构建，Dockerfile包含了构建镜像所需的指令
+制作 docker 的镜像一般可以使用 Dockerfile 来构建，Dockerfile 包含了构建镜像所需的指令。
 
-### Dockerfile命令
+制作镜像也可以通过打包一个已有容器来构建，使用 docker commit 命令
+
+### Dockerfile 命令
 
 #### 设置基础镜像
 
 用于设置构造新镜像的基础镜像
 
 ```dockerfile
-FROM <镜像名>[:版本号]
+FROM <镜像名>[:版本号 ]
 ```
 
 #### 工作目录
@@ -365,7 +370,7 @@ WORKDIR <工作目录路径>
 USER <用户名>[:<用户组>] 
 ```
 
-如果用户不存在，推荐使用命令先创建，如下添加了一个名为 `username` 的目录，指定了家目录`/home/username` ，当前用户默认使用 `/bin/bash` 
+如果用户不存在，推荐使用命令先创建，如下添加了一个名为 `username` 的目录，指定了家目录`/home/username` ，当前用户默认使用 `/bin/bash`
 
 ```dockerfile
 RUN useradd -d /home/username -m -s /bin/bash username USER username
@@ -401,7 +406,7 @@ RUN echo "$key1"
 
 #### 添加文件
 
-使用COPY把文件添加到镜像中，目标路径目录会自动创建，chown参数用于改变文件拥有者和所属组
+使用 COPY 把文件添加到镜像中，目标路径目录会自动创建，chown 参数用于改变文件拥有者和所属组
 
 ```dockerfile
 COPY [--chown=<user>:<group>] <源路径> <目标路径>
@@ -409,7 +414,7 @@ COPY [--chown=<user>:<group>] <源路径> <目标路径>
 
 
 
-使用 ADD把文件添加到镜像中，会自动解压gzip等格式的压缩文件，推荐用COPY
+使用 ADD 把文件添加到镜像中，会自动解压 gzip 等格式的压缩文件，推荐用 COPY
 
 ```dockerfile
 ADD [--chown=<user>:<group>] <源路径> <目标路径>
@@ -423,26 +428,43 @@ RUN 是构造新镜像时，在容器中执行的命令。可以认为启动镜�
 
 ```dockerfile
 RUN <命令行命令>
-RUN ["可执行文件","参数1","参数2","参数3"]
+RUN ["可执行文件","参数 1","参数 2","参数 3"]
 ```
 
 
 
-CMD 是当我们使用容器时，默认启动的命令
+CMD 是当我们使用容器时，默认启动的命令，CMD 的参数常用于变参。
 
 ```dockerfile
 CMD <命令行命令>
-CMD ["可执行文件","参数1","参数2","参数3"]
+CMD ["参数 1","参数 2","参数 3"] # 作为 ENTRYPOINT 的默认参数
+CMD ["可执行文件","参数 1","参数 2","参数 3"]
 ```
 
+使用 docker run 启动容器时，启动命令/参数， CMD 的全部内容会直接失效，被传入启动命令/参数替代。
 
+例如：`CMD ["/bin/top","-b"]` ，启动容器 `docker run  -it  centos_top:v1  ps` ，`ps` 会替代 `/bin/top -b`
+
+
+
+
+
+ENTRYPOINT 是启动容器时，默认启动命令，ENTRYPOINT 传的参数不会被命令行覆盖，而是会追加在本来命令的后面，常用于定参
+
+```dockerfile
+ENTRYPOINT ["可执行文件","参数 1","参数 2","参数 3"]
+```
+
+使用 docker run 启动容器时，启动命令/参数会被追加到 ENTRYPOINT 后面
+
+例如：`ENTRYPOINT ["/bin/echo","a"]` ，启动容器 `docker run -it centos_top:v1  "b"`, `"b"` 会追加在 ENTRYPOINT 后，变为`/bin/echo "a" "b"`
 
 #### 挂载卷
 
 VOLUME 用于定义匿名数据卷。在启动容器时忘记挂载数据卷，会自动挂载到匿名卷
 
 ```dockerfile
-VOLUME ["<挂载路径1>", "<挂载路径2>"]
+VOLUME ["<挂载路径 1>", "<挂载路径 2>"]
 VOLUME <挂载路径>
 ```
 
@@ -453,28 +475,55 @@ VOLUME <挂载路径>
 EXPOSE 用于声明可能会使用的端口，当使用 `-P` 启动容器时，会自动随机映射这些端口
 
 ```dockerfile
-EXPOSE <端口1> [<端口2>...]
+EXPOSE <端口 1> [<端口 2>...]
+```
+
+### 根据 Dockerfile 制作镜像
+
+docker build 命令可以根据 `Dockerfile` 文件构建镜像，命令格式和例子如下
+```bash
+docker build [选项 1] [选项 2] <上下文路径>
+```
+```bash
+docker build -t myApp:v1 -f Dockerfile .
+```
+| 选项 | 默认 | 描述                                              |
+| ---- | ---- | ------------------------------------------------- |
+| -t   |      | 指定构建镜像的名字和版本，格式为 `<镜像名>[:tag]` |
+| -f   |      | 指定构造用的 Dockerfile 文件                      |
+
+
+上下文路径一般可以用 `.` 表示当前路径，会把当前路径下所有文件全部输送到 DOCKERFILE 构建时上下文
+
+### 使用 Commit 制作镜像
+
+使用 docker commit 命令可以把容器制成一个镜像
+
+```bash
+docker commit [选项 1] [选项 2] <容器 id 或容器名> <镜像名:>[tag]
+```
+| 选项 | 默认 | 描述                           |
+| ---- | ---- | ------------------------------ |
+| -a   |      | 镜像作者                       |
+| -m   |      | 提示文字                       |
+| -p   |      | commit 时，暂停容器            |
+| -c   |      | 使用 Dockerfile 指令来创建镜像 |
+
+
+
+### 发布镜像
+
+docker push 命令可以发布镜像，格式和例子如下
+```bash
+docker push <目的 ip 或域名:端口号/镜像名:tag>
+```
+
+```bash
+docker push 127.0.0.1:1000/ubuntu:latest
 ```
 
 
 
-
-
-| 命令                                                         | 说明                                                         |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `FROM <镜像名>[:版本号]`                                     | 用于构造新镜像的基础镜像                                     |
-| `RUN <命令行命令>`<br/>`RUN ["可执行文件","参数1","参数2","参数3"]` | 构造镜像时执行的命令。因为每执行一次 Dockerfile命令镜像都会加一层，多条命令通常用 `&` 合并为一条 |
-| `COPY [--chown=<user>:<group>] <源路径> <目标路径>`          | chown参数用于改变文件拥有者和所属组；目标路径目录会自动创建  |
-| `ADD [--chown=<user>:<group>] <源路径> <目标路径>`           | 和COPY类似，会自动解压gzip等格式的压缩文件，推荐用COPY       |
-| `CMD <命令行命令>`<br/>`CMD ["可执行文件","参数1","参数2","参数3"]`<br/>`CMD ["参数1","参数2"]` # 默认使用 ENTRYPOINT 的可执行文件 | 启动容器时，默认执行程序的命令，常使用命令3传入变参，便于外部传入 |
-| `ENTRYPOINT ["可执行文件","参数1","参数2","参数3"]`          | 启动容器时，默认执行程序的命令，ENTRYPOINT 传的参数不会被命令行覆盖，常用于定参 |
-| `ENV <key1> <value1>`<br/>`ENV <key1>=<value1> <key2>=<value2>` | 指定环境变量，定义后可在Dockerfile中使用 `$key` 引用，也可以在容器运行后在系统环境变量中获取 |
-| `ARG <key1> <value1>`<br/>`ARG <key1>=<value1> <key2>=<value2>` | 指定变量，仅仅可以在Dockerfile中通过`$key` 引用              |
-| `VOLUME ["<路径1>", "<路径2>"]` <br/>`VOLUME <路径>`         | 定义匿名数据卷。在启动容器时忘记挂载数据卷，会自动挂载到匿名卷 |
-| `EXPOSE <端口1> [<端口2>...]`                                | 声明可能会使用的端口，当使用 `-P` 启动容器时，会自动随机映射这些端口 |
-| `WORKDIR <工作目录路径>`                                     | 创建和指定当前运行命令的工作目录，支持相对路径和绝对路径，推荐只使用绝对路径 |
-| `USER <用户名>[:<用户组>]`                                   | 切换用户、用户组，要求用户和用户组已经存在                   |
-
 ## 参考
 
-[Docker教程](https://www.runoob.com/docker/docker-dockerfile.html)
+[Docker 教程 ](https://www.runoob.com/docker/docker-dockerfile.html)
