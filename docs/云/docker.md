@@ -18,6 +18,8 @@ docker 基于 go 语言
 
 数据卷（volume）：将容器的目录映射到主机上，提供容器文件同步、持久化到主机
 
+Dockerfile：构建镜像文本文件
+
 ## 快速开始
 
 ### 安装
@@ -49,7 +51,7 @@ docker 基于 go 语言
     sudo yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
    ```
 
-   ​
+   
 
 3. 安装 docker 社区版 (ce)、客户端
 
@@ -321,7 +323,7 @@ docker volume prune
 | --filter   |      | 提供过滤器值（例如 ‘label=’） |
 | --force,-f |      | 不提示确认                    |
 
-##### 
+
 
 删除一个或多个卷
 
@@ -332,3 +334,147 @@ docker volume rm <卷名>
 | 选项       | 默认 | 描述                 |
 | ---------- | ---- | -------------------- |
 | --force,-f |      | 强制删除一个或多个卷 |
+
+## 制作镜像
+
+制作docker的镜像一般可以使用Dockerfile来构建，Dockerfile包含了构建镜像所需的指令
+
+### Dockerfile命令
+
+#### 设置基础镜像
+
+用于设置构造新镜像的基础镜像
+
+```dockerfile
+FROM <镜像名>[:版本号]
+```
+
+#### 工作目录
+
+创建和切换工作目录，之后的命令都在指定目录执行，支持相对路径和绝对路径，推荐只使用绝对路径
+
+```dockerfile
+WORKDIR <工作目录路径>
+```
+
+#### 切换用户
+
+切换容器内的用户，要求用户已经在（基础镜像）存在
+
+```dockerfile
+USER <用户名>[:<用户组>] 
+```
+
+如果用户不存在，推荐使用命令先创建，如下添加了一个名为 `username` 的目录，指定了家目录`/home/username` ，当前用户默认使用 `/bin/bash` 
+
+```dockerfile
+RUN useradd -d /home/username -m -s /bin/bash username USER username
+```
+
+#### 变量
+
+设置环境变量，环境变量可以在 Dockerfile 中引用，也可以在容器启动后引用
+
+```dockerfile
+ENV <key1> <value1>
+ENV <key1>=<value1> <key2>=<value2>
+```
+
+
+
+设置 Dockerfile 内变量
+
+```dockerfile
+ARG <key1> <value1>
+ARG <key1>=<value1> <key2>=<value2>
+```
+
+
+
+引用变量
+
+```dockerfile
+RUN echo "$key1"
+```
+
+
+
+#### 添加文件
+
+使用COPY把文件添加到镜像中，目标路径目录会自动创建，chown参数用于改变文件拥有者和所属组
+
+```dockerfile
+COPY [--chown=<user>:<group>] <源路径> <目标路径>
+```
+
+
+
+使用 ADD把文件添加到镜像中，会自动解压gzip等格式的压缩文件，推荐用COPY
+
+```dockerfile
+ADD [--chown=<user>:<group>] <源路径> <目标路径>
+```
+
+
+
+#### 执行命令
+
+RUN 是构造新镜像时，在容器中执行的命令。可以认为启动镜像作为容器，然后再容器中运行命令，然后再打包成镜像
+
+```dockerfile
+RUN <命令行命令>
+RUN ["可执行文件","参数1","参数2","参数3"]
+```
+
+
+
+CMD 是当我们使用容器时，默认启动的命令
+
+```dockerfile
+CMD <命令行命令>
+CMD ["可执行文件","参数1","参数2","参数3"]
+```
+
+
+
+#### 挂载卷
+
+VOLUME 用于定义匿名数据卷。在启动容器时忘记挂载数据卷，会自动挂载到匿名卷
+
+```dockerfile
+VOLUME ["<挂载路径1>", "<挂载路径2>"]
+VOLUME <挂载路径>
+```
+
+
+
+#### 端口
+
+EXPOSE 用于声明可能会使用的端口，当使用 `-P` 启动容器时，会自动随机映射这些端口
+
+```dockerfile
+EXPOSE <端口1> [<端口2>...]
+```
+
+
+
+
+
+| 命令                                                         | 说明                                                         |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `FROM <镜像名>[:版本号]`                                     | 用于构造新镜像的基础镜像                                     |
+| `RUN <命令行命令>`<br/>`RUN ["可执行文件","参数1","参数2","参数3"]` | 构造镜像时执行的命令。因为每执行一次 Dockerfile命令镜像都会加一层，多条命令通常用 `&` 合并为一条 |
+| `COPY [--chown=<user>:<group>] <源路径> <目标路径>`          | chown参数用于改变文件拥有者和所属组；目标路径目录会自动创建  |
+| `ADD [--chown=<user>:<group>] <源路径> <目标路径>`           | 和COPY类似，会自动解压gzip等格式的压缩文件，推荐用COPY       |
+| `CMD <命令行命令>`<br/>`CMD ["可执行文件","参数1","参数2","参数3"]`<br/>`CMD ["参数1","参数2"]` # 默认使用 ENTRYPOINT 的可执行文件 | 启动容器时，默认执行程序的命令，常使用命令3传入变参，便于外部传入 |
+| `ENTRYPOINT ["可执行文件","参数1","参数2","参数3"]`          | 启动容器时，默认执行程序的命令，ENTRYPOINT 传的参数不会被命令行覆盖，常用于定参 |
+| `ENV <key1> <value1>`<br/>`ENV <key1>=<value1> <key2>=<value2>` | 指定环境变量，定义后可在Dockerfile中使用 `$key` 引用，也可以在容器运行后在系统环境变量中获取 |
+| `ARG <key1> <value1>`<br/>`ARG <key1>=<value1> <key2>=<value2>` | 指定变量，仅仅可以在Dockerfile中通过`$key` 引用              |
+| `VOLUME ["<路径1>", "<路径2>"]` <br/>`VOLUME <路径>`         | 定义匿名数据卷。在启动容器时忘记挂载数据卷，会自动挂载到匿名卷 |
+| `EXPOSE <端口1> [<端口2>...]`                                | 声明可能会使用的端口，当使用 `-P` 启动容器时，会自动随机映射这些端口 |
+| `WORKDIR <工作目录路径>`                                     | 创建和指定当前运行命令的工作目录，支持相对路径和绝对路径，推荐只使用绝对路径 |
+| `USER <用户名>[:<用户组>]`                                   | 切换用户、用户组，要求用户和用户组已经存在                   |
+
+## 参考
+
+[Docker教程](https://www.runoob.com/docker/docker-dockerfile.html)
