@@ -14,7 +14,6 @@
   - [ ] MiniSpring、Spring
 + 持续集成、持续部署（CI/CD）
   - [x] GitHub actions
-
     - [ ] 补充更多示例
   - [ ] jenkins
   - [ ] Gitea + drone
@@ -28,6 +27,8 @@
     - [ ] 补充容器网络
   - [ ] Kubernetes(k8s)
   - [ ] k8s 的 Helm 管理
++ 网络
+  - [x] 证书和 HTTPS 基本使用
 + 认证授权
   - [ ] OAuth2
   - [ ] OIDC

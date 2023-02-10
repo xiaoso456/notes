@@ -29,6 +29,13 @@ export default defineUserConfig({
         viteOptions: {},
         vuePluginOptions: {},
     }),
+    markdown:{
+
+        headers:{
+
+            level: [2,3,4],
+        }
+    },
     theme: defaultTheme({
         colorMode: 'auto',
         navbar: [
@@ -54,9 +61,18 @@ export default defineUserConfig({
                     }
                 ]
             },
+            {
+                text: '网络',
+                children: [
+                    {
+                        text: '证书和HTTPS',
+                        link: '/网络/证书.md',
+                    }
+                ]
+            }
         ],
-        // 侧边栏最大深度，到h3标题
-        sidebarDepth: 2,
+        // 侧边栏最大深度，到h4标题
+        sidebarDepth: 3,
         subSidebar: 'auto',
 
         // 底边栏
