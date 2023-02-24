@@ -1,6 +1,7 @@
 import {defaultTheme, defineUserConfig, viteBundler} from 'vuepress'
 import {searchPlugin} from "@vuepress/plugin-search";
 import {googleAnalyticsPlugin} from "@vuepress/plugin-google-analytics";
+import {copyCodePlugin} from "vuepress-plugin-copy-code2";
 
 const base = "/notes"
 export default defineUserConfig({
@@ -22,6 +23,9 @@ export default defineUserConfig({
         }),
         googleAnalyticsPlugin({
             id: 'G-C2XKVMR51B'
+        }),
+        copyCodePlugin({
+            // 插件选项
         }),
     ],
     // 打包配置
