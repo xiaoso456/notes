@@ -38,16 +38,16 @@ jft <cmd命令> [actionArg]
 | :------------------------ | :----------------------------------------------------------- |
 | cmd                       | 要执行的操作 支持的命令【start，status，dump，stop】         |
 | actionArg                 | 属性名模式                                                   |
-| -i  <record name>         | 记录名称                                                     |
-| -r <record id>            | 记录 id 值                                                   |
-| --dumponexit <文件名.jfr> | 程序退出时，是否要 dump 出 .jfr 文件，默认为 false           |
-| -d <时间>                 | 延迟多久后启动 JFR 记录，支持带单位配置，eg: 60s, 2m, 5h, 3d. 不带单位就是秒，默认无延迟 |
-| --duration <持续时间>     | JFR 记录持续时间，支持单位配置，不带单位就是秒，默认一直记录 |
-| -s <配置文件地址>         | 采集 Event 的详细配置文件，默认是 default.jfc 位于 `$JAVA_HOME/lib/jfr/default.jfc` |
-| -f <输出文件地址>         | 将输出转储到指定路径                                         |
-| --maxage <时间值>         | 缓冲区数据最大文件记录保存时间，支持单位配置，不带单位就是秒，默认是不限制 |
-| --maxsize <大小>          | 缓冲区的最大文件大小，8支持单位配置， 不带单位是字节，m 或者 M 代表 MB，g 或者 G 代表 GB。 |
-| --state <状态值>          | jfr 记录状态，可以是 new, delay, running, stopped, closed    |
+| `-i  <record name>`         | 记录名称                                                     |
+| `-r <record id>`            | 记录 id 值                                                   |
+| `--dumponexit <文件名.jfr>` | 程序退出时，是否要 dump 出 .jfr 文件，默认为 false           |
+| `-d <时间>`                 | 延迟多久后启动 JFR 记录，支持带单位配置，eg: 60s, 2m, 5h, 3d. 不带单位就是秒，默认无延迟 |
+| `--duration <持续时间>`     | JFR 记录持续时间，支持单位配置，不带单位就是秒，默认一直记录 |
+| `-s <配置文件地址>`         | 采集 Event 的详细配置文件，默认是 default.jfc 位于 `$JAVA_HOME/lib/jfr/default.jfc` |
+| `-f <输出文件地址>`         | 将输出转储到指定路径                                         |
+| `--maxage <时间值>`         | 缓冲区数据最大文件记录保存时间，支持单位配置，不带单位就是秒，默认是不限制 |
+| `--maxsize <大小>`          | 缓冲区的最大文件大小，8支持单位配置， 不带单位是字节，m 或者 M 代表 MB，g 或者 G 代表 GB。 |
+| `--state <状态值>`          | jfr 记录状态，可以是 new, delay, running, stopped, closed    |
 
 ### JVM相关
 
@@ -63,8 +63,8 @@ dashboard -i 1000
 
 | 参数          | 参数说明                                 |
 | :------------ | :--------------------------------------- |
-| -i <时间间隔> | 刷新实时数据的时间间隔 (ms)，默认 5000ms |
-| -n <次数>     | 刷新实时数据的次数                       |
+| `-i <时间间隔>` | 刷新实时数据的时间间隔 (ms)，默认 5000ms |
+| `-n <次数>`     | 刷新实时数据的次数                       |
 
 #### thread
 
@@ -77,9 +77,9 @@ thread <线程id>
 | 参数名称      | 参数说明                                                |
 | :------------ | :------------------------------------------------------ |
 | *id*          | 线程 id                                                 |
-| -n <数量>     | 指定最忙的前 N 个线程并打印堆栈                         |
+| `-n <数量>`     | 指定最忙的前 N 个线程并打印堆栈                         |
 | -b            | 找出当前阻塞其他线程的线程                              |
-| -i <采样间隔> | 指定 cpu 使用率统计的采样间隔，单位为毫秒，默认值为 200 |
+| `-i <采样间隔>` | 指定 cpu 使用率统计的采样间隔，单位为毫秒，默认值为 200 |
 | --all         | 显示所有匹配的线程                                      |
 
 #### jvm
@@ -156,10 +156,10 @@ logger [-c <value>] [--classLoaderClass <value>] [-h] [--include-no-appender] [-
 
 | 参数                          | 说明                                                         |
 | ----------------------------- | ------------------------------------------------------------ |
-| -c <值>                       | 指定 classLoader 的 hashcode，默认是SystemClassLoader        |
-| --classLoaderClass <类全类名> | 对于只有唯一实例的 ClassLoader 可以通过`--classLoaderClass`指定 class name |
-| -l <日志等级>                 | 用于设置日志等级                                             |
-| -n <logger名>                 | 指定要操作的 logger                                          |
+| `-c <值>`                       | 指定 classLoader 的 hashcode，默认是SystemClassLoader        |
+| `--classLoaderClass <类全类名>` | 对于只有唯一实例的 ClassLoader 可以通过`--classLoaderClass`指定 class name |
+| `-l <日志等级>`                 | 用于设置日志等级                                             |
+| `-n <logger名>`                 | 指定要操作的 logger                                          |
 
 #### vmoption
 
@@ -190,7 +190,7 @@ vmoption PrintGC true
 
 `vmtool` 利用`JVMTI`接口，实现查询内存对象，强制 GC 等功能。
 
- 强制 gc 
+强制 gc
 
 ```bash
 vmtool --action forceGc
@@ -208,7 +208,7 @@ vmtool --action forceGc
 
 
 
-### class/classloader 
+### class/classloader
 
 去官网看看吧
 
