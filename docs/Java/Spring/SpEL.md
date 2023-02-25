@@ -157,7 +157,7 @@ demo02:
   numList: 1,2,3
 ```
 
-:::warn
+::: warning
 
 在 yaml 文件中，list 可以写成如下形式，但 spring 不支持这种格式的 list 解析
 
@@ -199,7 +199,7 @@ public class Info {
 
 ```
 
-::: warn
+::: warning
 
 被引用 list、map 访问权限应为 public，或者有 getter 方法
 
