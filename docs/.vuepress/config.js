@@ -73,6 +73,28 @@ export default defineUserConfig({
                         link: '/网络/证书.md',
                     }
                 ]
+            },
+            {
+                text: 'Spring',
+                children: [
+                    {
+                        text: 'SpEL表达式',
+                        link: '/Java/Spring/SpEL.md',
+                    }
+                ]
+            },
+            {
+                text: '常用工具',
+                children: [
+                    {
+                        text: '中英文排版工具',
+                        link: 'https://cyc2018.github.io/Text-Typesetting/',
+                    },
+                    {
+                        text: '编程常用工具箱 ctool',
+                        link: 'https://ctool.dev/'
+                    }
+                ]
             }
         ],
         // 侧边栏最大深度，到h4标题
