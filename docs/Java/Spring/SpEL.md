@@ -2,7 +2,7 @@
 
 Spring Expression Language (SpEL) 是 Spring Framework 中的一种表达式语言，可以用于在运行时计算表达式的值。 SpEL 支持基本的数学运算、调用方法、访问字段和本地变量、访问 Spring Bean 属性和调用 Bean 方法。
 
-常用于：向 Bean 注入外部配置的属性、向 Bean 注入其他 Bean 的属性、条件装配 Bean等
+常用于：向 Bean 注入外部配置的属性、向 Bean 注入其他 Bean 的属性、条件装配 Bean、Spring Data JPA 语句等
 
 ## 快速开始
 
@@ -66,7 +66,7 @@ User(name=xiaoso, age=1)
 
 ## SpEL 结构
 
-运算表达式以 `#` 开头，内容在大括号中，格式为`#{表达式}`
+SpEL 运算表达式以 `#` 开头，内容在大括号中，格式为`#{表达式}`
 
 外部文件属性引用以 `$` 开头，内容在大括号中，格式为 `${属性名}`
 
@@ -149,7 +149,11 @@ spEL 可以访问集合、也可以访问的 Bean 的内容
 ### 集合
 
 **引用整个集合**
+::: tip
 
+这部分是引用外部文件，不是 SpEL 内容，但和 SpEL 常做配合使用，故作介绍
+
+:::
 在 application.yaml 中加入如下内容：
 
 ```yaml
