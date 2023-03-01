@@ -15,7 +15,7 @@ wiki：[EventBus](https://github.com/google/guava/wiki/EventBusExplained)
 但是简单，能帮助快速理解发布订阅模型实现
 
 ## 快速开始
-
+### 同步任务
 1. 新建LoginEvent.java，表示登陆事件
 
 ```java
@@ -35,7 +35,7 @@ public class LogListener {
 
     @Subscribe
     public void handle(LoginEvent event){
-        System.out.println("log:"+event);
+        System.out.println(Thread.currentThread()+",log:"+event);
     }
 }
 
@@ -62,14 +62,38 @@ public class Main {
 
 4. 输出
 
-```java
-log:LoginEvent(username=xiaoso, success=true)
+```
+Thread[main,5,main],log:LoginEvent(username=xiaoso, success=true)
 ```
 
+### 异步任务
 
+只需要修改同步中的3中的代码
+```java
+    public static void main(String[] args) {
+        // 新建一个线程池，核心线程数/最大线程数为2
+        ThreadPoolExecutor poolExecutor = new ThreadPoolExecutor(2, 2, 60, TimeUnit.SECONDS, new LinkedBlockingDeque<Runnable>(32));
+        // 新建一个异步事件总线
+        AsyncEventBus eventBus = new AsyncEventBus(poolExecutor);
 
+        // 注册监听器
+        eventBus.register(new LogListener());
+        eventBus.register(new LogListener());
+        eventBus.register(new LogListener());
 
+        // 发布一个事件，用户xiaoso登陆成功
+        eventBus.post(new LoginEvent("xiaoso",true));
+        poolExecutor.shutdown();
 
+    }
+```
+
+观察输出
+```
+Thread[pool-1-thread-1,5,main],log:LoginEvent(username=xiaoso, success=true)
+Thread[pool-1-thread-1,5,main],log:LoginEvent(username=xiaoso, success=true)
+Thread[pool-1-thread-2,5,main],log:LoginEvent(username=xiaoso, success=true)
+```
 ## 参考
 
 [EventBusExplained · google/guava Wiki (github.com)](https://github.com/google/guava/wiki/EventBusExplained)
