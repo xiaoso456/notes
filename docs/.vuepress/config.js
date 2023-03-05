@@ -80,6 +80,39 @@ export default defineUserConfig({
                     {
                         text: 'SpEL表达式',
                         link: '/Java/Spring/SpEL.md',
+                    },
+                    {
+                        text: 'event',
+                        link: '/Java/Spring/Spring-Event.md',
+                    }
+                ]
+            },
+            {
+                text: '微服务',
+                children: [
+                    {
+                        text: '注册配置中心-Nacos',
+                        link: '/Java/SpringCloud/Nacos.md',
+                    },
+                    {
+                        text: '声明式HTTP客户端-OpenFeign',
+                        link: '/Java/SpringCloud/OpenFeign.md',
+                    },
+                    {
+                        text: '客户端负载均衡-Ribbon',
+                        link: '/Java/SpringCloud/Ribbon.md',
+                    },
+                    {
+                        text: '分布式事务-Seata',
+                        link: '/Java/SpringCloud/Seata.md',
+                    },
+                    {
+                        text: '流控熔断-Sentinel',
+                        link: '/Java/SpringCloud/Sentinel.md',
+                    },
+                    {
+                        text: '网关-Gateway',
+                        link: '/Java/SpringCloud/Gateway.md',
                     }
                 ]
             },
