@@ -274,7 +274,34 @@ private Integer size;
 private String title;
 ```
 
+#### 类方法和类变量
 
+新建一个静态类
+
+```java
+public class DemoUtils {
+    public static final String DEMO = "demo";
+
+    public static String getDemo(){
+        return "demo";
+    }
+}
+
+```
+
+调用类静态变量
+
+```java
+@Value("#{T(com.github.xiaoso456.demo.entity.DemoUtils).DEMO}") // demo
+private String staticVar;
+```
+
+调用类的静态方法
+
+```java
+@Value("#{T(com.github.xiaoso456.demo.entity.DemoUtils).getDemo()}") // demo
+private String staticFunc;
+```
 
 ## 参考
 
