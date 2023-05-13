@@ -31,7 +31,7 @@ Java Flight Recorder (JFR) 是一种用于收集有关正在运行的 Java 应�
 `jfr` 命令支持在程序动态运行过程中开启和关闭 JFR 记录。
 
 ```java
-jft <cmd命令> [actionArg]
+jfr <cmd命令> [actionArg]
 ```
 
 | 参数名称                  | 参数说明                                                     |

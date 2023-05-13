@@ -80,6 +80,9 @@ SpEL 运算表达式以 `#` 开头，内容在大括号中，格式为`#{表达�
 | 条件     | ?:                                           |
 | 正则     | matches                                      |
 
+### 默认值
+ `${属性名:默认值}` 引用外部属性时，如果无外部属性，使用默认值
+
 ### 算数运算
 
 支持的操作类型包括 `+, -, *, /, %, ^, div, mod`
@@ -179,7 +182,16 @@ demo02:
 @Value("${demo02.numList}") // 1,2,3
 private List<Integer> nums;
 ```
+### Map
 
+```yaml
+temp:
+  map: '{"1": "11","2": "22"}'
+```
+```java
+@Value("#{${temp.map:{}}}")
+Map<Long,Long> config;
+```
 ### Spring 上下文 Bean
 
 #### 访问属性
