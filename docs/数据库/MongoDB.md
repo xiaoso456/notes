@@ -507,8 +507,29 @@ db.<集合名>.dropIndex(index)
 db.message.dropIndex({"messageId":1})
 ```
 
+## 聚合 aggregate
 
+| 操作符         | 说明                       |
+| -------------- | -------------------------- |
+| `$match`       | 过滤符合条件的文档         |
+| `$limit`       | 限制聚合结果的数量         |
+| `$skip`        | 跳过指定数量的文档         |
+| `$sort`        | 对聚合结果进行排序         |
+| `$group`       | 对文档进行分组汇总         |
+| `$count`       | 统计文档数量               |
+| `$project`     | 筛选集合中的字段           |
+| `$unwind`      | 展开数组，拆分为多个文档   |
+| `$lookup`      | 从另一个集合中查找关联文档 |
+| `$graphLookup` | 对文档进行递归查找         |
+| `$bucket`      | 对数据进行桶分类           |
+| `$bucketAuto`  | 自动分桶                   |
+| `$geoNear`     | 查找接近指定位置的文档     |
+| `$addFields`   | 添加新字段                 |
+| `$replaceRoot` | 用文档中的字段替换根字段   |
+| `$sample`      | 随机取一部分文档           |
 
 ## 参考
 
 https://www.bilibili.com/video/BV1bJ411x7mq
+
+[mongoDB中聚合(aggregate)的具体使用](https://blog.csdn.net/ycclydy/article/details/120861374)
