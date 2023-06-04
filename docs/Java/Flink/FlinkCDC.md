@@ -188,6 +188,40 @@ maven 添加依赖
         </dependency>
 ```
 
+添加打包插件，使用 package 可以打成独立包
+
+```xml
+  <build>
+        <!--<sourceDirectory>src/main/java/com/github/xiaoso456</sourceDirectory>-->
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.1.1</version>
+                <configuration>
+                    <descriptorRefs>jar-with-dependencies</descriptorRefs>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.github.xiaoso456.FlinkCDC</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+```
+
+
+
 添加 Flink.java
 
 ```java
