@@ -96,6 +96,7 @@ public class Application {
                 .application("first-dubbo-provider")
                 // 这里是注册中心地址
                 .registry(new RegistryConfig("nacos://localhost:8848"))
+                // 使用 dubbo 协议，随机端口
                 .protocol(new ProtocolConfig("dubbo", -1))
                 .service(service)
                 .start()
@@ -169,7 +170,7 @@ public interface DemoService {
 }
 ```
 
-2. 新建 SpringBoot 模块 dubbo-samples-spring-boot-provider，引用并实现 1 中模块接口，自动向注册中心注册
+2. 新建 SpringBoot 模块 dubbo-samples-spring-boot-provider，**引用并实现 1 中模块接口**，自动向注册中心注册
 
 ```java
 // 实现并注册 dubbo 服务
