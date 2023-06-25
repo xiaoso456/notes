@@ -240,6 +240,417 @@ public class ConsumerApplication {
 
 然后，依次启动 provider、consumer 即可看到结果
 
+### dubbo rest
+
+该示例见 [xiaoso456/dubbo-samples-nacos (github.com)](https://github.com/xiaoso456/dubbo-samples-nacos/tree/master) `demo/dubbo-samples-springboot-rest`
+
+3.2.x 后，dubbo 重新提供 rest 的方式发布接口，以便和 springcloud 打通
+
+1. Interface 模块定义服务接口
+
+```java
+@RestController
+@RequestMapping("/demo")
+public interface DemoService {
+
+    @RequestMapping(value = "/hello",method = RequestMethod.GET)
+    String sayHello(String name);
+
+}
+```
+
+2. 实现接口，并使用 rest 协议发布
+
+```java
+@DubboService(protocol = "rest")
+@RequestMapping("/demo")
+public class DemoServiceImpl implements DemoService {
+
+    @Override
+    @RequestMapping(value = "/hello",method = RequestMethod.GET)
+    public String sayHello(@RequestParam("name") String name) {
+        return "Hello " + name;
+    }
+}
+
+```
+
+配置文件 application.yml
+
+```yaml
+dubbo:
+  application:
+    name: dubbo-springboot-demo-provider
+  protocol:
+    name: rest
+    port: 20000
+  registry:
+    address: nacos://localhost:8848
+```
+
+### Protobuf IDL 定义跨语言服务
+
+使用 protobuf 序列化，dubbo的TRIPLE协议提供服务，同时能够兼容 gRpc 调用
+
+新建 proto/hello.proto
+
+```protobuf
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.github.xiaoso456.hello";
+option java_outer_classname = "HelloWorldProto";
+option objc_class_prefix = "HLW";
+
+package helloService;
+
+message HelloRequest {
+  string name = 1;
+}
+
+message HelloReply {
+  string message = 1;
+}
+service Greeter{
+  rpc greet(HelloRequest) returns (HelloReply);
+}
+```
+
+新建 pom.xml
+
+```xml
+    <dependencies>
+        <dependency>
+            <groupId>com.alibaba.nacos</groupId>
+            <artifactId>nacos-client</artifactId>
+            <version>2.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo</artifactId>
+            <version>3.2.0-beta.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>3.21.1</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.36</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.36</version>
+        </dependency>
+
+
+    </dependencies>
+
+    <build>
+        <extensions>
+            <extension>
+                <groupId>kr.motd.maven</groupId>
+                <artifactId>os-maven-plugin</artifactId>
+                <version>1.6.1</version>
+            </extension>
+        </extensions>
+        <plugins>
+            <plugin>
+                <groupId>org.xolstice.maven.plugins</groupId>
+                <artifactId>protobuf-maven-plugin</artifactId>
+                <version>0.6.1</version>
+                <configuration>
+                    <protocArtifact>com.google.protobuf:protoc:3.21.1:exe:${os.detected.classifier}</protocArtifact>
+                    <protocPlugins>
+                        <protocPlugin>
+                            <id>dubbo</id>
+                            <groupId>org.apache.dubbo</groupId>
+                            <artifactId>dubbo-compiler</artifactId>
+                            <version>3.2.0-beta.4</version>
+                            <mainClass>org.apache.dubbo.gen.tri.Dubbo3TripleGenerator</mainClass>
+                        </protocPlugin>
+                    </protocPlugins>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+```
+
+执行一次 `mvn clear install` 编译出 protobuf 接口文件，可以在 `/target/classes/com/github/xiaoso456/hello` 文件夹找到接口定义文件
+
+![image-20230624233048086](./assets/image-20230624233048086.png)
+
+新建 service 包，新建 GreeterImpl.java 实现类
+
+```java
+package com.github.xiaoso456.service;
+
+import com.github.xiaoso456.hello.HelloReply;
+import com.github.xiaoso456.hello.HelloRequest;
+
+public class GreeterImpl extends com.github.xiaoso456.hello.DubboGreeterTriple.GreeterImplBase {
+    @Override
+    public HelloReply greet(HelloRequest request) {
+        HelloReply helloReply = HelloReply.newBuilder()
+                .setMessage("hello :" + request.getName())
+                .build();
+        return helloReply;
+    }
+}
+```
+
+新建 Provider.java
+
+```java
+public class Provider {
+    public static void main(String[] args) throws IOException {
+        ServiceConfig<com.github.xiaoso456.hello.Greeter> service = new ServiceConfig<>();
+        service.setInterface(com.github.xiaoso456.hello.Greeter.class);
+        service.setRef(new GreeterImpl());
+
+        DubboBootstrap bootstrap = DubboBootstrap.getInstance();
+        bootstrap.application(new ApplicationConfig("tri-stub-server"))
+                .registry(new RegistryConfig("nacos://127.0.0.1:8848"))
+                .protocol(new ProtocolConfig(CommonConstants.TRIPLE, 50051))
+                .service(service)
+                .start()
+                .await();
+    }
+}
+```
+
+新建 Consumer.java
+
+```java
+public class Consumer {
+    public static void main(String[] args) {
+        DubboBootstrap bootstrap = DubboBootstrap.getInstance();
+        ReferenceConfig<Greeter> ref = new ReferenceConfig<>();
+        ref.setInterface(Greeter.class);
+        ref.setProtocol(CommonConstants.TRIPLE);
+        ref.setProxy(CommonConstants.NATIVE_STUB);
+        ref.setTimeout(3000);
+        bootstrap.application(new ApplicationConfig("tri-stub-client"))
+                .registry(new RegistryConfig("nacos://127.0.0.1:8848"))
+                .reference(ref)
+                .start();
+
+        Greeter greeter = ref.get();
+        HelloRequest request = HelloRequest.newBuilder().setName("Demo Request App Client").build();
+        HelloReply reply = greeter.greet(request);
+        System.out.println("Received reply:" + reply);
+    }
+}
+
+```
+
+运行 provider、consumer，可以看到结果
+
+```
+Received reply:message: "hello :Demo Request App Client"
+```
+
+
+
+使用了 protobuf 序列化的triple协议兼容grpc，可以使用 postman进行测试，但值得注意的是，导入 proto 文件时，需要修改 proto 定义的 package 为java包名
+
+```protobuf
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.github.xiaoso456.hello";
+option java_outer_classname = "HelloWorldProto";
+option objc_class_prefix = "HLW";
+
+package com.github.xiaoso456.hello;
+
+message HelloRequest {
+  string name = 1;
+}
+
+message HelloReply {
+  string message = 1;
+}
+service Greeter{
+  rpc greet(HelloRequest) returns (HelloReply);
+}
+```
+
+
+
+![image-20230624234101442](./assets/image-20230624234101442.png)
+
+### 端口协议复用
+
+dubbo 服务端可以在同一个端口解析多种协议
+
+
+
+pom.xml 引入依赖
+
+```xml
+    <dependencies>
+        <dependency>
+            <groupId>com.alibaba.nacos</groupId>
+            <artifactId>nacos-client</artifactId>
+            <version>2.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo</artifactId>
+            <version>3.2.0-beta.4</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo-rpc-triple</artifactId>
+            <version>3.2.0-beta.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo-rpc-dubbo</artifactId>
+            <version>3.2.0-beta.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo-remoting-api</artifactId>
+            <version>3.2.0-beta.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo-remoting-netty4</artifactId>
+            <version>3.2.0-beta.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.36</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.36</version>
+        </dependency>
+
+
+    </dependencies>
+```
+
+新建接口 GreetingService.java
+
+```java
+public interface GreetingService {
+    String sayHello(String name);
+}
+
+```
+
+新建实现类 GreetingServiceImpl.java
+
+```java
+public class GreetingServiceImpl implements GreetingService {
+    @Override
+    public String sayHello(String name) {
+        return "hello : "+ name;
+    }
+}
+```
+
+新建 Provider.java，提供 dubbo + 额外 triple 协议
+
+注意dubbo协议和triple协议位置不要对调，tri为额外协议，否则会报错，原因未知
+
+```java
+public class Provider {
+    public static void main(String[] args) {
+        ServiceConfig<GreetingService> service = new ServiceConfig<>();
+        service.setInterface(GreetingService.class);
+        service.setRef(new GreetingServiceImpl());
+
+        // 设置 dubbo 协议 + 额外 tri 协议
+        ProtocolConfig protocolConfig = new ProtocolConfig(CommonConstants.DUBBO_PROTOCOL, 52000);
+        protocolConfig.setExtProtocol(CommonConstants.TRIPLE + ",");
+
+
+        DubboBootstrap bootstrap = DubboBootstrap.getInstance();
+        bootstrap.application(new ApplicationConfig("port-unification-provider"))
+                .registry(new RegistryConfig("nacos://127.0.0.1:8848"))
+                .protocol(protocolConfig)
+                .service(service)
+                .start()
+                .await();
+    }
+}
+
+```
+
+新建 DubboConsumer.java
+
+```java
+public class DubboConsumer {
+    public static void main(String[] args) {
+        DubboBootstrap bootstrap = DubboBootstrap.getInstance();
+        ReferenceConfig<GreetingService> ref = new ReferenceConfig<>();
+        ref.setInterface(GreetingService.class);
+        ref.setProtocol(CommonConstants.DUBBO);
+        bootstrap.application(new ApplicationConfig("dubbo-consumer"))
+                .registry(new RegistryConfig("nacos://127.0.0.1:8848"))
+                .reference(ref)
+                .start();
+
+        GreetingService greetingService = ref.get();
+
+        String result = greetingService.sayHello("dubbo consumer");
+        System.out.println(result);
+
+    }
+}
+```
+
+新建 TripleConsumer.java
+
+```java
+public class TripleConsumer {
+    public static void main(String[] args) {
+        DubboBootstrap bootstrap = DubboBootstrap.getInstance();
+        ReferenceConfig<GreetingService> ref = new ReferenceConfig<>();
+        ref.setInterface(GreetingService.class);
+        ref.setProtocol(CommonConstants.TRIPLE);
+
+        bootstrap.application(new ApplicationConfig("triple-consumer"))
+                .registry(new RegistryConfig("nacos://127.0.0.1:8848"))
+                .reference(ref)
+                .start();
+
+        GreetingService greetingService = ref.get();
+
+        String result = greetingService.sayHello("triple consumer");
+        System.out.println(result);
+
+    }
+}
+```
+
+依次执行，可以看到结果
+
 ## 参考
 
 [Dubbo 文档 | Apache Dubbo](https://cn.dubbo.apache.org/zh-cn/overview/home/#)
