@@ -357,10 +357,6 @@ public class AopTip implements RuntimeHintsRegistrar {
 
 这时再编译，就能正常运行
 
-### 你真的需要 native images 么?
-
-
-
 ## 参考
 
 https://www.graalvm.org/
