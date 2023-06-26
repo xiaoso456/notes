@@ -140,6 +140,10 @@ export default defineUserConfig({
                     {
                         text: 'k6-压测',
                         link: '/测试/k6.md',
+                    },
+                    {
+                        text: 'MongoDB',
+                        link: '/数据库/MongoDB.md'
                     }
                 ]
             },

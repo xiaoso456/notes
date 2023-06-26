@@ -56,7 +56,7 @@ skywalking 主要提供功能如下：
 
 + Rocketbot UI
 
-  SkyWalking的主要UI
+  SkyWalking 的主要 UI
 
 ### 代理组件
 
@@ -84,9 +84,9 @@ skywalking 主要提供功能如下：
 
 + SkyWalking Cloud on Kubernetes
 
-  
 
-### 数据库 
+
+### 数据库
 
 + BanyanDB Server
 + BanyanDB Java Client
@@ -109,9 +109,9 @@ skywalking 主要提供功能如下：
 
 ### 容器环境
 
-#### 使用skywalking jdk构建镜像
+#### 使用 skywalking jdk 构建镜像
 
-docker 镜像可以基于官方镜像构建，这样启动 Java程序就会自动启动 Java Agent
+docker 镜像可以基于官方镜像构建，这样启动 Java 程序就会自动启动 Java Agent
 
 ```dockerfile
 FROM apache/skywalking-java-agent:8.5.0-jdk8
@@ -119,7 +119,7 @@ FROM apache/skywalking-java-agent:8.5.0-jdk8
 
 #### 使用代理
 
-如果不方便使用官方jdk构建镜像，也可以继续用命令行参数的方式启动Java程序
+如果不方便使用官方 jdk 构建镜像，也可以继续用命令行参数的方式启动 Java 程序
 
 ```
 -javaagent:/path/to/skywalking-package/agent/skywalking-agent.jar
@@ -183,15 +183,15 @@ spec:
 
 为了理解 skywalking 跟踪模型你需要理解下面这些概念：[Trace Data Protocol | Apache SkyWalking](https://skywalking.apache.org/docs/main/v9.5.0/en/api/trace-data-protocol-v3/)
 
-`EntrySpan`：表示服务提供者，也是服务器端的端点。作为一个APM系统，SkyWalking针对的是应用服务器。因此，几乎所有的服务和MQ消费者都是EntrySpans。
+`EntrySpan`：表示服务提供者，也是服务器端的端点。作为一个 APM 系统，SkyWalking 针对的是应用服务器。因此，几乎所有的服务和 MQ 消费者都是 EntrySpans。
 
-`LocalSpan`：表示与远程服务无关的跟踪片段（典型代表就是Java方法）。它既不是MQ生产者/消费者，也不是服务的提供者/消费者（例如HTTP服务）。
+`LocalSpan`：表示与远程服务无关的跟踪片段（典型代表就是 Java 方法）。它既不是 MQ 生产者/消费者，也不是服务的提供者/消费者（例如 HTTP 服务）。
 
-`ExitSpan`：典型代表是客户端的服务或MQ生产者。在SkyWalking的早期版本被称为LeafSpan。例如，通过JDBC访问数据库，以及读取Redis/Memcached均归类为ExitSpans。
+`ExitSpan`：典型代表是客户端的服务或 MQ 生产者。在 SkyWalking 的早期版本被称为 LeafSpan。例如，通过 JDBC 访问数据库，以及读取 Redis/Memcached 均归类为 ExitSpans。
 
-`跨线程/进程父span`：称为“reference”。参考承载了trace ID、segment ID、span ID、service name, service instance name, endpoint name以及用于client的目标地址（注意：在跨线程操作中，这并不是必需的）中的此请求的信息。欲了解更多详情，请参阅 https://skywalking.apache.org/docs/main/v9.5.0/en/api/x-process-propagation-headers-v3
+`跨线程/进程父 span`：称为“reference”。参考承载了 trace ID、segment ID、span ID、service name, service instance name, endpoint name 以及用于 client 的目标地址（注意：在跨线程操作中，这并不是必需的）中的此请求的信息。欲了解更多详情，请参阅 https://skywalking.apache.org/docs/main/v9.5.0/en/api/x-process-propagation-headers-v3
 
-`Span＃skipAnalysis`：如果span不需要进行后端分析，可能为TRUE
+`Span＃skipAnalysis`：如果 span 不需要进行后端分析，可能为 TRUE
 
 
 

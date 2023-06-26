@@ -4,9 +4,9 @@ Flink 是一个支持流处理和批处理的分布式计算框架
 
 ## 概念
 
-### DataStream 
+### DataStream
 
-FLink中的数据集合，是可以包含重复项，不可变的数据集合，数据可以是有界也可以是无界
+FLink 中的数据集合，是可以包含重复项，不可变的数据集合，数据可以是有界也可以是无界
 
 DataStream 是不可变的，一旦被创建，不能添加或删除
 
@@ -20,15 +20,15 @@ Flink 一个流的并行度，可以认为是算子中最大的并行度
 
 oneToOne（web ui 图显示为 forwarding） 一对一关系，不需要调整数据顺序，不需要重分区
 
-redistributing重分区(web ui 图显示为hash)
+redistributing 重分区 (web ui 图显示为 hash)
 
-合并算子链：并行度相同，并且为oneToOne关系的算子可以合并成一个大任务
+合并算子链：并行度相同，并且为 oneToOne 关系的算子可以合并成一个大任务
 
 ### 任务槽 Task Slots
 
 Flink 中每一个 TaskManager 都是一个 JVM 进程，资源有限，一个计算资源就是一个任务槽，用来独立执行一个子任务
 
-目前 Slots 只会隔离内存，不会隔离 CPU 资源，可以将 Slots 数量设置为CPU核心数
+目前 Slots 只会隔离内存，不会隔离 CPU 资源，可以将 Slots 数量设置为 CPU 核心数
 
 ## 程序构成
 
@@ -47,7 +47,7 @@ StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironm
 // 2 加载数据
 DataStream<String> text = env.readTextFile("file:///path/to/file");
 
-// 3 转换数据，生成新的DataStream
+// 3 转换数据，生成新的 DataStream
 DataStream<Integer> parsed = text.map(new MapFunction<String, Integer>() {
     @Override
     public Integer map(String value) {
@@ -55,7 +55,7 @@ DataStream<Integer> parsed = text.map(new MapFunction<String, Integer>() {
     }
 });
 // 4 写到外部系统,也叫 sink
-// 常用的有 print()和 writeAsText(String path)
+// 常用的有 print() 和 writeAsText(String path)
 
 // 5 执行
 env.execute("test job");
@@ -93,9 +93,9 @@ env.execute("test job");
 
 启动
 
-1. 把 jar 包 放到 lib目录下
+1. 把 jar 包 放到 lib 目录下
 
-2. 使用命令启动`standalone-job.sh start --job-classname com.xxx.xxx类名`
+2. 使用命令启动`standalone-job.sh start --job-classname com.xxx.xxx 类名`
 
 3. 使用命令启动 `taskmanager.sh start`
 
@@ -117,7 +117,7 @@ hadoop 的资源管理
 
 ## 架构
 
-standalone会话模式为例
+standalone 会话模式为例
 
 ![image-20230611164015593](./assets/image-20230611164015593.png)
 

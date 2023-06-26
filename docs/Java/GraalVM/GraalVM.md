@@ -1,8 +1,8 @@
 ## 简介
 
-GraalVM是一个基于Java虚拟机（JVM）的高性能跨语言运行时环境，可以在一个共同的运行时中支持许多编程语言，包括Java、Scala、Kotlin、Groovy、JavaScript等。
+GraalVM 是一个基于 Java 虚拟机（JVM）的高性能跨语言运行时环境，可以在一个共同的运行时中支持许多编程语言，包括 Java、Scala、Kotlin、Groovy、JavaScript 等。
 
-常用于：构建本机镜像、JVM语言调用Python、JavaScript等语言
+常用于：构建本机镜像、JVM 语言调用 Python、JavaScript 等语言
 
 本文示例可以在代码仓库找到：[xiaoso456/graalvm-demo (github.com)](https://github.com/xiaoso456/graalvm-demo)
 
@@ -36,9 +36,9 @@ gu install llvm-toolchain
 
 ## Native Images
 
-本机镜像是 GraalVM 一个最常用用途，可以把 Java程序打包成直接二进制可执行程序，有以下优点
+本机镜像是 GraalVM 一个最常用用途，可以把 Java 程序打包成直接二进制可执行程序，有以下优点
 
-- 使用Java虚拟机所需资源的一小部分，因此运行成本更低
+- 使用 Java 虚拟机所需资源的一小部分，因此运行成本更低
 - 冷启动快，以毫秒为单位启动
 - 立即提供最佳性能，无需预热
 - 可以打包到轻量级容器映像中，以实现快速高效的部署
@@ -68,11 +68,11 @@ gu install -L ./native-image-installable-svm-java17-linux-amd64-22.3.2.jar
 
 
 
-需要安装c语言相关本地工具链
+需要安装 c 语言相关本地工具链
 
 Linux：
 
-使用 yum 安装 `gcc ` 、`glibc-devel`、`zlib-devel` 
+使用 yum 安装 `gcc ` 、`glibc-devel`、`zlib-devel`
 
 ```shell
 yum install gcc glibc-devel zlib-devel
@@ -82,7 +82,7 @@ yum install gcc glibc-devel zlib-devel
 
 windows：
 
-安装 Visual Studio、Visual Studio C++（2017 15.9版本以上），并安装 Windows SDK
+安装 Visual Studio、Visual Studio C++（2017 15.9 版本以上），并安装 Windows SDK
 
 安装完毕后，能找类似的 `x64 Native Tools Command Prompt for VS 2022` 的程序，由于 windows 原生 cmd 奇怪的文件名限制，使用 native-images 相关命令时，最好使用这个命令行工具
 
@@ -128,7 +128,7 @@ native-image [options] -jar jarfile [imagename]
 
 #### 使用 maven 构建工具
 
-注意 maven 版本不可过低，这里是用的是3.8.x
+注意 maven 版本不可过低，这里是用的是 3.8.x
 
 添加以下内容到 pom.xml，`${native.maven.plugin.version}` 这里使用 0.9.22 版本
 
@@ -160,9 +160,9 @@ native-image [options] -jar jarfile [imagename]
                             </execution>
                         </executions>
                         <configuration>
-                            <!-- imageName用于设置生成的二进制文件名称 -->
+                            <!-- imageName 用于设置生成的二进制文件名称 -->
                             <imageName>${project.artifactId}</imageName>
-                            <!-- mainClass用于指定main方法类路径 -->
+                            <!-- mainClass 用于指定 main 方法类路径 -->
                             <mainClass>com.github.xiaoso456.Main</mainClass>
                             <!--<buildArgs>-->
                             <!--    &#45;&#45;no-fallback-->
@@ -185,15 +185,15 @@ mvn -Pnative -DskipTests package
 
 #### 反射支持和使用 native agent
 
-默认情况下，graalVM会自动分析程序的反射使用，并生成反射配置
+默认情况下，graalVM 会自动分析程序的反射使用，并生成反射配置
 
-如果包含未能分析的反射，才需要手动配置,编写元数据文件，参考 [用于 GraalVM 原生映像构建的 Maven 插件](https://graalvm.github.io/native-build-tools/latest/maven-plugin.html#agent-support)
+如果包含未能分析的反射，才需要手动配置,编写元数据文件，参考 [用于 GraalVM 原生映像构建的 Maven 插件 ](https://graalvm.github.io/native-build-tools/latest/maven-plugin.html#agent-support)
 
 [使用跟踪代理收集元数据 (graalvm.org)](https://www.graalvm.org/latest/reference-manual/native-image/metadata/AutomaticMetadataCollection/#agent-advanced-usage)
 
 ### SpringBoot 应用构建 Native Images
 
-需要 SpringBoot 3 
+需要 SpringBoot 3
 
 #### AOT 处理
 
@@ -227,7 +227,7 @@ mvn -Pnative -DskipTests package
 
 #### 构建 SpringBoot native images
 
-以 maven 为例，pom需要包含以下内容
+以 maven 为例，pom 需要包含以下内容
 
 ```xml
 <parent>
@@ -274,7 +274,7 @@ mvn -Pnative native:compile
 
 #### SpringBoot 中标记反射资源
 
-如果使用了反射和AOP，虽然能把 SpringBoot 应用编译成本机镜像，但是在调用时，就会抛出异常
+如果使用了反射和 AOP，虽然能把 SpringBoot 应用编译成本机镜像，但是在调用时，就会抛出异常
 
 如下，在 pom.xml 中引入 spring web 和 aop
 
@@ -327,7 +327,7 @@ public class HelloAop {
 
 这时如果不对该 `helloAround` 方法进行标记，访问 `/hello` 时就会报错
 
-在SpringBoot中标记资源比较简单，新建一个 AopTip.java 实现 RuntimeHintsRegistrar 接口即可
+在 SpringBoot 中标记资源比较简单，新建一个 AopTip.java 实现 RuntimeHintsRegistrar 接口即可
 
 ```java
 public class AopTip implements RuntimeHintsRegistrar {
@@ -361,7 +361,7 @@ public class AopTip implements RuntimeHintsRegistrar {
 
 https://www.graalvm.org/
 
-[GraalVM系列（一）：JVM的未来——GraalVM集成入门 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/148519037)
+[GraalVM 系列（一）：JVM 的未来——GraalVM 集成入门 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/148519037)
 
 [原生构建工具 (graalvm.github.io)](https://graalvm.github.io/native-build-tools/latest/index.html)
 

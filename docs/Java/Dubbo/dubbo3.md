@@ -17,34 +17,34 @@ Apache Dubbo 是一款易用的、提供高性能通信和服务治理能力的�
 
 ```xml
         <dependency>
-            <groupId>com.alibaba.nacos</groupId>
-            <artifactId>nacos-client</artifactId>
-            <version>2.1.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.dubbo</groupId>
-            <artifactId>dubbo</artifactId>
-            <version>3.2.0-beta.4</version>
-        </dependency>
+   <groupId>com.alibaba.nacos</groupId>
+   <artifactId>nacos-client</artifactId>
+   <version>2.1.2</version>
+</dependency>
+<dependency>
+<groupId>org.apache.dubbo</groupId>
+<artifactId>dubbo</artifactId>
+<version>3.2.0-beta.4</version>
+</dependency>
 
 
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.36</version>
-        </dependency>
+<dependency>
+<groupId>org.slf4j</groupId>
+<artifactId>slf4j-api</artifactId>
+<version>1.7.36</version>
+</dependency>
 
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-reload4j</artifactId>
-            <version>1.7.36</version>
-        </dependency>
+<dependency>
+<groupId>org.slf4j</groupId>
+<artifactId>slf4j-reload4j</artifactId>
+<version>1.7.36</version>
+</dependency>
 
-        <dependency>
-            <groupId>ch.qos.reload4j</groupId>
-            <artifactId>reload4j</artifactId>
-            <version>1.2.24</version>
-        </dependency>
+<dependency>
+<groupId>ch.qos.reload4j</groupId>
+<artifactId>reload4j</artifactId>
+<version>1.2.24</version>
+</dependency>
 ```
 
 3. 新建 log4j.properties 文件配置日志
@@ -63,7 +63,7 @@ Apache Dubbo 是一款易用的、提供高性能通信和服务治理能力的�
 
 ```java
 public interface GreetingsService {
-    String sayHi(String name);
+   String sayHi(String name);
 }
 ```
 
@@ -73,10 +73,10 @@ public interface GreetingsService {
 
 ```java
 public class GreetingsServiceImpl implements GreetingsService {
-    @Override
-    public String sayHi(String name) {
-        return "hi, " + name;
-    }
+   @Override
+   public String sayHi(String name) {
+      return "hi, " + name;
+   }
 }
 ```
 
@@ -85,23 +85,23 @@ public class GreetingsServiceImpl implements GreetingsService {
 ```java
 public class Application {
 
-    public static void main(String[] args) {
-        // 服务配置
-        ServiceConfig<GreetingsService> service = new ServiceConfig<>();
-        service.setInterface(GreetingsService.class);
-        service.setRef(new GreetingsServiceImpl());
-        
-        // 启动服务提供者实例
-        DubboBootstrap.getInstance()
-                .application("first-dubbo-provider")
-                // 这里是注册中心地址
-                .registry(new RegistryConfig("nacos://localhost:8848"))
-                // 使用 dubbo 协议，随机端口
-                .protocol(new ProtocolConfig("dubbo", -1))
-                .service(service)
-                .start()
-                .await();
-    }
+   public static void main(String[] args) {
+      // 服务配置
+      ServiceConfig<GreetingsService> service = new ServiceConfig<>();
+      service.setInterface(GreetingsService.class);
+      service.setRef(new GreetingsServiceImpl());
+
+      // 启动服务提供者实例
+      DubboBootstrap.getInstance()
+              .application("first-dubbo-provider")
+              // 这里是注册中心地址
+              .registry(new RegistryConfig("nacos://localhost:8848"))
+              // 使用 dubbo 协议，随机端口
+              .protocol(new ProtocolConfig("dubbo", -1))
+              .service(service)
+              .start()
+              .await();
+   }
 }
 
 ```
@@ -113,27 +113,27 @@ public class Application {
 ```java
 public class AlwaysApplication {
 
-    public static void main(String[] args){
-        ReferenceConfig<GreetingsService> reference = new ReferenceConfig<>();
-        reference.setInterface(GreetingsService.class);
+   public static void main(String[] args){
+      ReferenceConfig<GreetingsService> reference = new ReferenceConfig<>();
+      reference.setInterface(GreetingsService.class);
 
-        DubboBootstrap.getInstance()
-                .application("first-dubbo-consumer")
-                .registry(new RegistryConfig("nacos://localhost:8848"))
-                .reference(reference)
-                .start();
+      DubboBootstrap.getInstance()
+              .application("first-dubbo-consumer")
+              .registry(new RegistryConfig("nacos://localhost:8848"))
+              .reference(reference)
+              .start();
 
-        GreetingsService service = reference.get();
-        while (true) {
-            try {
-                String message = service.sayHi("dubbo");
-                System.out.println(new Date() + " Receive result ======> " + message);
-                Thread.sleep(1000);
-            } catch (Throwable t) {
-                t.printStackTrace();
-            }
-        }
-    }
+      GreetingsService service = reference.get();
+      while (true) {
+         try {
+            String message = service.sayHi("dubbo");
+            System.out.println(new Date() + " Receive result ======> " + message);
+            Thread.sleep(1000);
+         } catch (Throwable t) {
+            t.printStackTrace();
+         }
+      }
+   }
 
 }
 ```
@@ -154,7 +154,7 @@ public class AlwaysApplication {
 
 ###  Dubbo + SpringBoot
 
-建议直接clone项目 [dubbo-samples-nacos](https://github.com/xiaoso456/dubbo-samples-nacos/tree/master) 
+建议直接 clone 项目 [dubbo-samples-nacos](https://github.com/xiaoso456/dubbo-samples-nacos/tree/master)
 
 ```
 git clone https://github.com/xiaoso456/dubbo-samples-nacos.git
@@ -290,7 +290,7 @@ dubbo:
 
 ### Protobuf IDL 定义跨语言服务
 
-使用 protobuf 序列化，dubbo的TRIPLE协议提供服务，同时能够兼容 gRpc 调用
+使用 protobuf 序列化，dubbo 的 TRIPLE 协议提供服务，同时能够兼容 gRpc 调用
 
 新建 proto/hello.proto
 
@@ -466,7 +466,7 @@ Received reply:message: "hello :Demo Request App Client"
 
 
 
-使用了 protobuf 序列化的triple协议兼容grpc，可以使用 postman进行测试，但值得注意的是，导入 proto 文件时，需要修改 proto 定义的 package 为java包名
+使用了 protobuf 序列化的 triple 协议兼容 grpc，可以使用 postman 进行测试，但值得注意的是，导入 proto 文件时，需要修改 proto 定义的 package 为 java 包名
 
 ```protobuf
 syntax = "proto3";
@@ -576,28 +576,28 @@ public class GreetingServiceImpl implements GreetingService {
 
 新建 Provider.java，提供 dubbo + 额外 triple 协议
 
-注意dubbo协议和triple协议位置不要对调，tri为额外协议，否则会报错，原因未知
+注意 dubbo 协议和 triple 协议位置不要对调，tri 为额外协议，否则会报错，原因未知
 
 ```java
 public class Provider {
-    public static void main(String[] args) {
-        ServiceConfig<GreetingService> service = new ServiceConfig<>();
-        service.setInterface(GreetingService.class);
-        service.setRef(new GreetingServiceImpl());
+   public static void main(String[] args) {
+      ServiceConfig<GreetingService> service = new ServiceConfig<>();
+      service.setInterface(GreetingService.class);
+      service.setRef(new GreetingServiceImpl());
 
-        // 设置 dubbo 协议 + 额外 tri 协议
-        ProtocolConfig protocolConfig = new ProtocolConfig(CommonConstants.DUBBO_PROTOCOL, 52000);
-        protocolConfig.setExtProtocol(CommonConstants.TRIPLE + ",");
+      // 设置 dubbo 协议 + 额外 tri 协议
+      ProtocolConfig protocolConfig = new ProtocolConfig(CommonConstants.DUBBO_PROTOCOL, 52000);
+      protocolConfig.setExtProtocol(CommonConstants.TRIPLE + ",");
 
 
-        DubboBootstrap bootstrap = DubboBootstrap.getInstance();
-        bootstrap.application(new ApplicationConfig("port-unification-provider"))
-                .registry(new RegistryConfig("nacos://127.0.0.1:8848"))
-                .protocol(protocolConfig)
-                .service(service)
-                .start()
-                .await();
-    }
+      DubboBootstrap bootstrap = DubboBootstrap.getInstance();
+      bootstrap.application(new ApplicationConfig("port-unification-provider"))
+              .registry(new RegistryConfig("nacos://127.0.0.1:8848"))
+              .protocol(protocolConfig)
+              .service(service)
+              .start()
+              .await();
+   }
 }
 
 ```
@@ -606,22 +606,22 @@ public class Provider {
 
 ```java
 public class DubboConsumer {
-    public static void main(String[] args) {
-        DubboBootstrap bootstrap = DubboBootstrap.getInstance();
-        ReferenceConfig<GreetingService> ref = new ReferenceConfig<>();
-        ref.setInterface(GreetingService.class);
-        ref.setProtocol(CommonConstants.DUBBO);
-        bootstrap.application(new ApplicationConfig("dubbo-consumer"))
-                .registry(new RegistryConfig("nacos://127.0.0.1:8848"))
-                .reference(ref)
-                .start();
+   public static void main(String[] args) {
+      DubboBootstrap bootstrap = DubboBootstrap.getInstance();
+      ReferenceConfig<GreetingService> ref = new ReferenceConfig<>();
+      ref.setInterface(GreetingService.class);
+      ref.setProtocol(CommonConstants.DUBBO);
+      bootstrap.application(new ApplicationConfig("dubbo-consumer"))
+              .registry(new RegistryConfig("nacos://127.0.0.1:8848"))
+              .reference(ref)
+              .start();
 
-        GreetingService greetingService = ref.get();
+      GreetingService greetingService = ref.get();
 
-        String result = greetingService.sayHello("dubbo consumer");
-        System.out.println(result);
+      String result = greetingService.sayHello("dubbo consumer");
+      System.out.println(result);
 
-    }
+   }
 }
 ```
 
@@ -629,23 +629,23 @@ public class DubboConsumer {
 
 ```java
 public class TripleConsumer {
-    public static void main(String[] args) {
-        DubboBootstrap bootstrap = DubboBootstrap.getInstance();
-        ReferenceConfig<GreetingService> ref = new ReferenceConfig<>();
-        ref.setInterface(GreetingService.class);
-        ref.setProtocol(CommonConstants.TRIPLE);
+   public static void main(String[] args) {
+      DubboBootstrap bootstrap = DubboBootstrap.getInstance();
+      ReferenceConfig<GreetingService> ref = new ReferenceConfig<>();
+      ref.setInterface(GreetingService.class);
+      ref.setProtocol(CommonConstants.TRIPLE);
 
-        bootstrap.application(new ApplicationConfig("triple-consumer"))
-                .registry(new RegistryConfig("nacos://127.0.0.1:8848"))
-                .reference(ref)
-                .start();
+      bootstrap.application(new ApplicationConfig("triple-consumer"))
+              .registry(new RegistryConfig("nacos://127.0.0.1:8848"))
+              .reference(ref)
+              .start();
 
-        GreetingService greetingService = ref.get();
+      GreetingService greetingService = ref.get();
 
-        String result = greetingService.sayHello("triple consumer");
-        System.out.println(result);
+      String result = greetingService.sayHello("triple consumer");
+      System.out.println(result);
 
-    }
+   }
 }
 ```
 

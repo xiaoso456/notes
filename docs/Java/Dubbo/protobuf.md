@@ -1,17 +1,17 @@
 ## 简介
 
-ProtoBuf 是一种轻便高效的二进制序列化数据结构的方法，比XML和JSON等传统文本数据序列化方案更加轻量，且利于多语言互操作。
+ProtoBuf 是一种轻便高效的二进制序列化数据结构的方法，比 XML 和 JSON 等传统文本数据序列化方案更加轻量，且利于多语言互操作。
 
 ## 快速开始
 
-下面演示了如何Java和Python如何通过protobuf文件交互数据
+下面演示了如何 Java 和 Python 如何通过 protobuf 文件交互数据
 
-1. 下载protobuf二进制文件 [Github](https://github.com/protocolbuffers/protobuf/releases)
+1. 下载 protobuf 二进制文件 [Github](https://github.com/protocolbuffers/protobuf/releases)
 2. 加入到环境变量中
 3. 编写 search.proto 文件
 
 ```protobuf
-// 使用 proto3语法
+// 使用 proto3 语法
 syntax = "proto3";
 package search;
 option java_multiple_files = true;
@@ -126,29 +126,29 @@ message SearchRequest {
 | ----------- | ------------------------------------------------------------ | -------- | ------------------- | ------------------------------- | ------- | ------------------------------ |
 | double      |                                                              | double   | double              | float                           | float64 | Float                          |
 | float       |                                                              | float    | float               | float                           | float32 | Float                          |
-| int32       | 使用可变长度编码。编码负数效率低下-如果您的字段可能具有负值，请改用sint32 | int32    | int                 | int                             | int32   | Fixnum or Bignum (as required) |
-| int64       | 使用可变长度编码。编码负数效率低下-如果您的字段可能具有负值，请改用sint64 | int64    | long                | int/long[4]                     | int64   | Bignum                         |
+| int32       | 使用可变长度编码。编码负数效率低下-如果您的字段可能具有负值，请改用 sint32 | int32    | int                 | int                             | int32   | Fixnum or Bignum (as required) |
+| int64       | 使用可变长度编码。编码负数效率低下-如果您的字段可能具有负值，请改用 sint64 | int64    | long                | int/long[4]                     | int64   | Bignum                         |
 | uint32      | 使用可变长度编码                                             | uint32   | int[2]              | int/long[4]                     | uint32  | Fixnum or Bignum (as required) |
 | uint64      | 使用可变长度编码                                             | uint64   | long[2]             | int/long[4]                     | uint64  | Bignum                         |
-| sint32      | 使用可变长度编码。带符号的整数值。与常规int32相比，它们对负数的编码效率更高。 | int32    | int                 | int                             | int32   | Fixnum or Bignum (as required) |
-| sint64      | 使用可变长度编码。带符号的整数值。与常规int64相比，它们对负数的编码效率更高。 | int64    | long                | int/long[4]                     | int64   | Bignum                         |
-| fixed32     | 总是四个字节。如果值经常大于2^28，则效率比uint32更高。       | uint32   | int[2]              | int/long[4]                     | uint32  | Fixnum or Bignum (as required) |
-| fixed64     | 总是八个字节。如果值经常大于2^56，则效率比uint64更高。       | uint64   | long[2]             | int/long[4]                     | uint64  | Bignum                         |
-| sfixed32    | 总为4字节                                                    | int32    | int                 | int                             | int32   | Fixnum or Bignum (as required) |
-| sfixed64    | 总为8字节                                                    | int64    | long                | int/long[4]                     | int64   | Bignum                         |
+| sint32      | 使用可变长度编码。带符号的整数值。与常规 int32 相比，它们对负数的编码效率更高。 | int32    | int                 | int                             | int32   | Fixnum or Bignum (as required) |
+| sint64      | 使用可变长度编码。带符号的整数值。与常规 int64 相比，它们对负数的编码效率更高。 | int64    | long                | int/long[4]                     | int64   | Bignum                         |
+| fixed32     | 总是四个字节。如果值经常大于 2^28，则效率比 uint32 更高。       | uint32   | int[2]              | int/long[4]                     | uint32  | Fixnum or Bignum (as required) |
+| fixed64     | 总是八个字节。如果值经常大于 2^56，则效率比 uint64 更高。       | uint64   | long[2]             | int/long[4]                     | uint64  | Bignum                         |
+| sfixed32    | 总为 4 字节                                                    | int32    | int                 | int                             | int32   | Fixnum or Bignum (as required) |
+| sfixed64    | 总为 8 字节                                                    | int64    | long                | int/long[4]                     | int64   | Bignum                         |
 | bool        |                                                              | bool     | boolean             | bool                            | bool    | TrueClass/FalseClass           |
-| string      | 字符串必须始终包含UTF-8编码或7位ASCII文本，并且长度不能超过2^32。 | string   | String              | str/unicode[5]                  | string  | String (UTF-8)                 |
-| bytes       | 可以包含不超过2^32的任意字节序列                             | string   | ByteString          | str (Python 2) bytes (Python 3) | []byte  | String (ASCII-8BIT)            |
+| string      | 字符串必须始终包含 UTF-8 编码或 7 位 ASCII 文本，并且长度不能超过 2^32。 | string   | String              | str/unicode[5]                  | string  | String (UTF-8)                 |
+| bytes       | 可以包含不超过 2^32 的任意字节序列                             | string   | ByteString          | str (Python 2) bytes (Python 3) | []byte  | String (ASCII-8BIT)            |
 
 #### 字段编号
 
 每一个字段需要有不同的编号，用于标记字段。
 
-编号从1开始，最大为2^29
+编号从 1 开始，最大为 2^29
 
-编号1~15 会被编码为 1个字节，16~2047会被编码为2个字节，常用字段应该优先使用 1~15编号。
+编号 1~15 会被编码为 1 个字节，16~2047 会被编码为 2 个字节，常用字段应该优先使用 1~15 编号。
 
-如下 `query` 字段的编号是1
+如下 `query` 字段的编号是 1
 
 ```protobuf
 message SearchRequest {
@@ -162,9 +162,9 @@ message SearchRequest {
 
 消息字段有四种类型：
 
-+ singular：默认类型，表示有0个或1个元素，如果设置了值，会把值序列化，如果设置了默认值，不会序列化默认值。
-+ optional：可选的，表示有0个或1个元素。如果设置了值，会把值序列化，如果设置了默认值，不会序列化默认值。（没懂和singular有啥区别）
-+ repeated：表示有0个或多个有序元素，类似 list
++ singular：默认类型，表示有 0 个或 1 个元素，如果设置了值，会把值序列化，如果设置了默认值，不会序列化默认值。
++ optional：可选的，表示有 0 个或 1 个元素。如果设置了值，会把值序列化，如果设置了默认值，不会序列化默认值。（没懂和 singular 有啥区别）
++ repeated：表示有 0 个或多个有序元素，类似 list
 + map：类似 map，详情参考 [Map](https://protobuf.dev/programming-guides/encoding/#maps)
 
 #### 保留字段
@@ -173,7 +173,7 @@ message SearchRequest {
 
 ```protobuf
 message Foo {
-  reserved 2, 15, 9 to 11; // 保留字段编号为 2,15,9~11的
+  reserved 2, 15, 9 to 11; // 保留字段编号为 2,15,9~11 的
   reserved "foo", "bar"; // 保留字段名称为 foo 和 bar 的
 }
 ```
@@ -185,10 +185,10 @@ message Foo {
 | 类型        | 默认值              |      |
 | ----------- | ------------------- | ---- |
 | String      | 空字符串            |      |
-| byte        | 空byte              |      |
+| byte        | 空 byte              |      |
 | bool        | false               |      |
-| int32等数值 | 0                   |      |
-| enum        | 第一个枚举值，且为0 |      |
+| int32 等数值 | 0                   |      |
+| enum        | 第一个枚举值，且为 0 |      |
 | message     | 取决于语言          |      |
 
 
@@ -206,7 +206,7 @@ message Person {
 
 ### 定义枚举
 
-枚举类型第一个编号必须为0
+枚举类型第一个编号必须为 0
 
 如下，定义了枚举字段 Corpus，并在 message 中使用
 
@@ -245,7 +245,7 @@ enum EnumAllowingAlias {
 
 ::: warning
 
-反序列化枚举类依赖语言实现，包含的信息可能放到message中或丢失
+反序列化枚举类依赖语言实现，包含的信息可能放到 message 中或丢失
 
 :::
 
@@ -257,7 +257,7 @@ enum EnumAllowingAlias {
 import "myproject/other_protos.proto";
 ```
 
-使用 import public ，可以导入依赖的依赖，如下定义后，a才可以使用c中定义的消息
+使用 import public ，可以导入依赖的依赖，如下定义后，a 才可以使用 c 中定义的消息
 
 ```protobuf
 // a.proto
@@ -299,9 +299,9 @@ message SomeOtherMessage {
 ```protobuf
 // 生成的 java 包名
 option java_package = "com.example.foo";
-// 生成的外部Java类名
+// 生成的外部 Java 类名
 option java_outer_classname = "Ponycopter";
-// 如果为 true,一个message一个文件
+// 如果为 true,一个 message 一个文件
 option java_multiple_files = true;
 ```
 
@@ -309,7 +309,7 @@ option java_multiple_files = true;
 
 ## 更新 message 原则
 
-[更新message原则](https://protobuf.dev/programming-guides/proto3/)
+[更新 message 原则 ](https://protobuf.dev/programming-guides/proto3/)
 
 ## 参考
 

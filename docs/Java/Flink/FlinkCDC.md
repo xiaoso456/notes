@@ -1,8 +1,8 @@
 ## 简介
 
-FlinkCDC是一个基于Apache Flink的实时数据流处理框架，可以捕获任意数据源的变更信息，将其转换为数据流，并利用Flink的流式处理能力进行实时的增量数据处理和实时ETL等操作。FlinkCDC支持SQL数据库、NoSQL、Hive等多种数据源，实现了高效的数据捕获能力和Exactly-Once语义的数据处理，具备高性能、可扩展性和灵活性等优点，可以满足大规模、实时处理的需求。
+FlinkCDC 是一个基于 Apache Flink 的实时数据流处理框架，可以捕获任意数据源的变更信息，将其转换为数据流，并利用 Flink 的流式处理能力进行实时的增量数据处理和实时 ETL 等操作。FlinkCDC 支持 SQL 数据库、NoSQL、Hive 等多种数据源，实现了高效的数据捕获能力和 Exactly-Once 语义的数据处理，具备高性能、可扩展性和灵活性等优点，可以满足大规模、实时处理的需求。
 
-可用作数据同步，如 MySql 数据库向 ElasticSearch同步
+可用作数据同步，如 MySql 数据库向 ElasticSearch 同步
 
 ## 快速上手
 
@@ -72,7 +72,7 @@ COLLATE=utf8_general_ci;
 
 INSERT INTO demo.user_table
 (id, username, description)
-VALUES(1, 'xiaoso', '第一个用户');
+VALUES(1, 'xiaoso', ' 第一个用户 ');
 
 ```
 
@@ -80,10 +80,10 @@ VALUES(1, 'xiaoso', '第一个用户');
 
    解压 `tar -zxvf flink-1.16.0-bin-scala_2.12.tgz `
 
-   进入 `flink-1.16.0/lib` 文件夹，下载 es 和 mysql连接器
+   进入 `flink-1.16.0/lib` 文件夹，下载 es 和 mysql 连接器
 
    + 下载 es 连接器`curl -O https://repo.maven.apache.org/maven2/org/apache/flink/flink-sql-connector-elasticsearch7/1.16.0/flink-sql-connector-elasticsearch7-1.16.0.jar`
-   + 下载mysql 连接器`curl -O https://repo1.maven.org/maven2/com/ververica/flink-sql-connector-mysql-cdc/2.3.0/flink-sql-connector-mysql-cdc-2.3.0.jar`
+   + 下载 mysql 连接器`curl -O https://repo1.maven.org/maven2/com/ververica/flink-sql-connector-mysql-cdc/2.3.0/flink-sql-connector-mysql-cdc-2.3.0.jar`
 
 4. 修改 `conf/flink-conf.yaml`如下几行
 
@@ -95,9 +95,9 @@ taskmanager.numberOfTaskSlots: 50
 6. 启动 flink sql client `./bin/sql-client.sh`，并在客户端中输入以下命令
 
 ```sql
- -- 开启 checkpoint，每隔3秒做一次 checkpoint
+ -- 开启 checkpoint，每隔 3 秒做一次 checkpoint
  SET execution.checkpointing.interval = 3s;
- -- 把 mysql 的 user_table 表作为数据源，创建flink中的user_table表
+ -- 把 mysql 的 user_table 表作为数据源，创建 flink 中的 user_table 表
 CREATE TABLE user_table (
     id bigint,
     username STRING,
@@ -114,7 +114,7 @@ CREATE TABLE user_table (
     'server-time-zone' = 'GMT'
   );
   
-  -- 创建 user_es 表，写入到es
+  -- 创建 user_es 表，写入到 es
   CREATE TABLE user_es (
     id bigint,
     username STRING,
@@ -145,7 +145,7 @@ maven 添加依赖
             <artifactId>flink-connector-base</artifactId>
             <version>1.16.0</version>
         </dependency>
-        <!--mysql连接器-->
+        <!--mysql 连接器-->
         <dependency>
             <groupId>com.ververica</groupId>
             <artifactId>flink-connector-mysql-cdc</artifactId>
@@ -163,7 +163,7 @@ maven 添加依赖
             <artifactId>flink-table-api-java</artifactId>
             <version>1.16.0</version>
         </dependency>
-        <!--java客户端-->
+        <!--java 客户端-->
         <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-clients</artifactId>
@@ -236,35 +236,35 @@ import org.apache.flink.configuration.RestOptions;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
 public class FlinkCDC {
-    public static void main(String[] args) throws Exception {
-        Configuration configuration = new Configuration();
-        configuration.setInteger(RestOptions.PORT,8081);
-        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment(configuration);
+   public static void main(String[] args) throws Exception {
+      Configuration configuration = new Configuration();
+      configuration.setInteger(RestOptions.PORT,8081);
+      StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment(configuration);
 
 
-        MySqlSource<String> source = MySqlSource.<String>builder()
-                .hostname("192.168.229.128")
-                .port(13306)
-                .username("root")
-                .password("123456")
-                .databaseList("demo")
-                .tableList("demo.user_table")
-                .serverTimeZone("UTC")
-                // 序列化器
-                .deserializer(new StringDebeziumDeserializationSchema())
-                // 启动方式，查询一次全量数据，然后监听binlog
-                .startupOptions(StartupOptions.initial())
-                .build();
+      MySqlSource<String> source = MySqlSource.<String>builder()
+              .hostname("192.168.229.128")
+              .port(13306)
+              .username("root")
+              .password("123456")
+              .databaseList("demo")
+              .tableList("demo.user_table")
+              .serverTimeZone("UTC")
+              // 序列化器
+              .deserializer(new StringDebeziumDeserializationSchema())
+              // 启动方式，查询一次全量数据，然后监听 binlog
+              .startupOptions(StartupOptions.initial())
+              .build();
 
-        // sink下游
-        env.enableCheckpointing(3000);
-        env.fromSource(source, WatermarkStrategy.noWatermarks(), "MySQL Source")
-                .setParallelism(1)
-                .print().setParallelism(1);
-        // 启动 job
-        env.execute("Print MySQL Snapshot + Binlog");
+      // sink 下游
+      env.enableCheckpointing(3000);
+      env.fromSource(source, WatermarkStrategy.noWatermarks(), "MySQL Source")
+              .setParallelism(1)
+              .print().setParallelism(1);
+      // 启动 job
+      env.execute("Print MySQL Snapshot + Binlog");
 
-    }
+   }
 }
 ```
 
