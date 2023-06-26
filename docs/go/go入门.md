@@ -1,6 +1,6 @@
 ## 简介
 
-Go是一种由Google开发的编程语言，具有静态类型、高效、可移植性强等特点，适用于开发网络应用、分布式系统、云计算等领域。它支持并发编程、自动垃圾回收等特性，代码简洁易懂，易于维护和扩展。
+Go 是一种由 Google 开发的编程语言，具有静态类型、高效、可移植性强等特点，适用于开发网络应用、分布式系统、云计算等领域。它支持并发编程、自动垃圾回收等特性，代码简洁易懂，易于维护和扩展。
 
 ## 快速上手
 
@@ -14,7 +14,7 @@ Go是一种由Google开发的编程语言，具有静态类型、高效、可移
 
 代理配置方法：[七牛云 - Goproxy.cn](https://goproxy.cn/)
 
-Windows PowerShell下配置：
+Windows PowerShell 下配置：
 
 ```powershell
 $env:GO111MODULE = "on"
@@ -25,7 +25,7 @@ $env:GOPROXY = "https://goproxy.cn"
 
 [Git - Downloads (git-scm.com)](https://git-scm.com/downloads)
 
-### 第一个程序hello
+### 第一个程序 hello
 
 新建 go.mod
 
@@ -61,9 +61,9 @@ go build
 
 ## 常用说明
 
-go项目管理工具：
+go 项目管理工具：
 
-+ GOPATH：保存了应用自身的代码和第三方依赖的代码，需要设置GOPATH到本地的某个目录，已废弃
++ GOPATH：保存了应用自身的代码和第三方依赖的代码，需要设置 GOPATH 到本地的某个目录，已废弃
 
 + GO Module：推荐的项目方式
 
@@ -123,7 +123,7 @@ go get 包
 go install
 ```
 
-使用 module方式初始化项目,会生成 go.mod 文件
+使用 module 方式初始化项目,会生成 go.mod 文件
 
 ```
 go mod init 项目名
@@ -142,7 +142,7 @@ go mod init 项目名
 
 #### 包命名
 
-1. package和目录名保持一致，应该只含小写
+1. package 和目录名保持一致，应该只含小写
 
 ```go
 package dao
@@ -182,7 +182,7 @@ type Reader interface{
 
 #### 变量命名
 
-驼峰命名，首字母根据访问控制大写或小写，如果是bool类型，以`Has/has`、`is/Is`、`can/Can`、`Allow/allow`开头
+驼峰命名，首字母根据访问控制大写或小写，如果是 bool 类型，以`Has/has`、`is/Is`、`can/Can`、`Allow/allow`开头
 
 ### 单元测试
 
@@ -207,7 +207,7 @@ type Reader interface{
 
 ### 变量
 
-变量定义语法，go的变量声明后必须使用
+变量定义语法，go 的变量声明后必须使用
 
 ```go
 var 变量名 type
@@ -268,7 +268,7 @@ func main() {
 定义常量
 
 ```go
-const 常量名 [类型] = value
+const 常量名 [类型 ] = value
 ```
 
 ```go
@@ -284,7 +284,7 @@ const i, j = 1, 2
 
 可被编译器修改的常量 `itoa`
 
-默认是 0，每调用一次加1，遇到 const 关键字被重置为 0，可以使用 `_`跳过某些值，如果遇到其他变量声明，也是跳过某些值
+默认是 0，每调用一次加 1，遇到 const 关键字被重置为 0，可以使用 `_`跳过某些值，如果遇到其他变量声明，也是跳过某些值
 
 ```go
 const(
@@ -303,7 +303,7 @@ const(
 | ---------- | ------------------------------------------------ |
 | bool       | 布尔类型，true 或 false                          |
 | string     | 字符串类型，表示一串字符                         |
-| int        | 有符号整型，表示整数，在32位和64位系统取对应长度 |
+| int        | 有符号整型，表示整数，在 32 位和 64 位系统取对应长度 |
 | uint       | 无符号整型，表示非负整数                         |
 | uintptr    | 无符号整型，用于存储指针地址                     |
 | byte       | 无符号整型，表示字符类型的单个字节，等同于 uint8 |
@@ -324,7 +324,7 @@ const(
 
 
 
-int取决于操作系统长度，如果要操作系统无关，可以使用类似如下
+int 取决于操作系统长度，如果要操作系统无关，可以使用类似如下
 
 + int8、int16、int32、int64
 + uint8、uint16、uint32、uint64
@@ -397,7 +397,7 @@ func sum(args ...int){
 
 函数可以作为一个类型
 
-如下定义了一个叫 fun 的函数类型，接受2个入参，1和返回值
+如下定义了一个叫 fun 的函数类型，接受 2 个入参，1 和返回值
 
 ```go
 type fun func(int ,int) int
@@ -462,7 +462,7 @@ func main(){
 
 闭包：定义在一个函数内部的函数
 
-个人理解：可以直接当成一个类用，x就是类实例变量，调用 add 方法时，就生成一个实例
+个人理解：可以直接当成一个类用，x 就是类实例变量，调用 add 方法时，就生成一个实例
 
 ```go
 package main
@@ -491,7 +491,7 @@ func main() {
 
 ### 方法
 
-Go 中的方法，是一种特殊的函数，定义于struct之上，和struct绑定，被称为struct的接收者（receiver）
+Go 中的方法，是一种特殊的函数，定义于 struct 之上，和 struct 绑定，被称为 struct 的接收者（receiver）
 
 例子如下
 
@@ -517,7 +517,7 @@ func main() {
 }
 ```
 
-接收者类型不一定需要是 struct，可以是 slice、map、channel等类型
+接收者类型不一定需要是 struct，可以是 slice、map、channel 等类型
 
 如果接收者是一个指针类型，则自动解除引用
 
@@ -604,7 +604,7 @@ func main() {
 
 ## 并发
 
-### go和channel
+### go 和 channel
 
 go 可以开启一个协程，如果主进程结束，协程也会退出
 
@@ -614,11 +614,11 @@ go myFunc()
 
 
 
-channel用于在 goroutine 之间共享数据
+channel 用于在 goroutine 之间共享数据
 
 ```go
-unBuffered := make(chan int) // int无缓冲通道，发送接收会阻塞
-bufferd := make(chan int,10) // 大小为1int有缓冲通道
+unBuffered := make(chan int) // int 无缓冲通道，发送接收会阻塞
+bufferd := make(chan int,10) // 大小为 1int 有缓冲通道
 ```
 
 将值发送到通道
@@ -649,7 +649,7 @@ close(chan1)
 
 ### WaitGroup
 
-WaitGroup用于阻塞等待
+WaitGroup 用于阻塞等待
 
 ```go
 var wg sync.WaitGroup
@@ -661,10 +661,10 @@ func hello(i int) {
 
 func main() {
 	for i := 0; i < 10; i++ {
-		wg.Add(1) // wg组 +1
+		wg.Add(1) // wg 组 +1
 		go hello(i)
 	}
-	wg.Wait() // 等带所有协程执行完毕,也就是wg=0时
+	wg.Wait() // 等带所有协程执行完毕,也就是 wg=0 时
 }
 
 ```
@@ -672,7 +672,7 @@ func main() {
 ### runtime 包
 
 ```go
-runtime.Goshed() // 让出CPU时间片，重新等待安排任务
+runtime.Goshed() // 让出 CPU 时间片，重新等待安排任务
 ```
 
 
@@ -684,7 +684,7 @@ runtime.Goexit() // 退出当前协程
 
 
 ```go
-runtime.NumCPU() // 查看cpi核心数
+runtime.NumCPU() // 查看 cpi 核心数
 runtime.GOMAXPROCS(2) // 设置协程核心数
 ```
 
@@ -699,13 +699,13 @@ lock.Unlock() // 解锁
 
 ### select switch
 
-select 是 Go 中一个控制结构，用于处理异步 IO 操作，select 会监听 case 语句的 channel 读写操作，当case中的channel读写操作为非阻塞状态时，会触发对应动作
+select 是 Go 中一个控制结构，用于处理异步 IO 操作，select 会监听 case 语句的 channel 读写操作，当 case 中的 channel 读写操作为非阻塞状态时，会触发对应动作
 
 1. default 总是可运行的
 2. case 语句必须是一个 channel 操作
 3. 如果有多个可运行 case，会公平地选出一个执行
-4. 如果没有可运行case，有default，会执行default
-5. 如果没有可运行case，没有default，会阻塞 select，直到某个 case 通信可运行
+4. 如果没有可运行 case，有 default，会执行 default
+5. 如果没有可运行 case，没有 default，会阻塞 select，直到某个 case 通信可运行
 
 ```go
 go func(){
@@ -716,7 +716,7 @@ go func(){
 
 ### Timer
 
-Timer可以实现一些定时操作
+Timer 可以实现一些定时操作
 
 ```go
 timer1 := time.NewTimer(time.Second * 1)
@@ -748,11 +748,11 @@ stop := timer1.Stop() // 停止定时器,对应方法不再执行
 
 
 
-还有 reset之类的方法
+还有 reset 之类的方法
 
 ### Ticker
 
-Timer只执行一次，Ticker 是周期性执行
+Timer 只执行一次，Ticker 是周期性执行
 
 ```go
 ticker := time.NewTicker(time.Second)
@@ -779,7 +779,7 @@ func add(){
 }
 ```
 
-原子读写，go在读变量的时候，读一般可能会被中断
+原子读写，go 在读变量的时候，读一般可能会被中断
 
 ```go
 atomic.LoadInt32(&i)
@@ -813,7 +813,7 @@ go mod init xiaoso/testmod
 go mod tidy
 ```
 
-将依赖包复制到项目下的vendor目录
+将依赖包复制到项目下的 vendor 目录
 
 ```go
 go mod vendor

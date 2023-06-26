@@ -34,9 +34,7 @@ export default defineUserConfig({
         vuePluginOptions: {},
     }),
     markdown:{
-
         headers:{
-
             level: [2,3,4],
         }
     },
@@ -113,7 +111,66 @@ export default defineUserConfig({
                     {
                         text: '网关-Gateway',
                         link: '/Java/SpringCloud/Gateway.md',
+                    },
+                    {
+                        text: 'APM-SkyWalking',
+                        link: '/Java/SkyWalking/skywalking.md',
                     }
+                ]
+            },
+            {
+                text: '常用组件',
+                children: [
+                    {
+                        text: 'Dubbo3',
+                        link: '/Java/Dubbo/dubbo3.md',
+                    },
+                    {
+                        text: 'Flink',
+                        link: '/Java/Flink/Flink.md',
+                    },
+                    {
+                        text: 'FlinkCDC',
+                        link: '/Java/Flink/FlinkCDC.md',
+                    },
+                    {
+                        text: 'GraalVM',
+                        link: '/Java/GraalVM/GraalVM.md',
+                    },
+                    {
+                        text: 'k6-压测',
+                        link: '/测试/k6.md',
+                    }
+                ]
+            },
+            {
+                text: 'golang',
+                children: [
+                    {
+                        text: 'golang入门',
+                        link: '/go/go入门.md',
+                    }
+                ]
+            },
+            {
+                text: '常用知识',
+                children: [
+                    {
+                        text: '设计模式',
+                        link: '/常用知识/设计模式.md',
+                    },
+                    {
+                        text: '布隆过滤器',
+                        link: '/常用知识/布隆过滤器.md',
+                    },
+                    {
+                        text: 'yaml',
+                        link: '/通用/yaml.md',
+                    },
+                    {
+                        text: 'protobuf',
+                        link: '/Java/Dubbo/protobuf.md',
+                    },
                 ]
             },
             {
