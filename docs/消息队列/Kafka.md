@@ -12,9 +12,23 @@ Kafka是一个开源的分布式流处理平台，用于高吞吐量、可持久
 
 Kafka在实时数据处理、日志收集、流式处理、事件驱动架构等场景中广泛应用。它已成为许多大型公司和组织中处理大规模数据的核心组件之一。
 
+## 重要变更点
+
++ Kafka自3.0版本后，不再强依赖 Zookeeper
+
+  在多broker场景下（甚至几十都有可能出现zookeeper瓶颈），zookeeper需要保存大量数据，容易延迟过高，导致broker和controller大面积掉线。zookeeper是强一致性存储系统，写入性能不佳。新版本实现了一套分布式一致性协议 KRaft 并支持 Controller 独立部署
+
++ Kafka自3.0版本后，controller可以单独部署
+
+  原因：集群中，对外提供服务的controller只有一个，负载大，容易崩溃进而重新选举对外服务节点。如果集群元数据很多，故障转移代价大
+
++ 
+
 ## 消息模型
 
 Broker：一个 Kafka 节点
+
+Controller ：Broker中对外提供服务
 
 Topic：某种类型消息的合集
 
@@ -33,3 +47,5 @@ Consumer：通过 Broker 从某个 Topic 中获取消息
 ## 参考
 
 [Kafka 入门教程 | 始于珞尘 - 掘金 (juejin.cn)](https://juejin.cn/post/6844903603568640008?searchId=202307200830331F44E30D9EFAAFD4CD9F)
+
+[Kafka 架构、核心机制和场景解读 - 掘金 (juejin.cn)](https://juejin.cn/post/7176575859686375481?searchId=20230722190330626B50ED92BD1F7FA69D#heading-57)
