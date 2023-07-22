@@ -1,6 +1,8 @@
 ## 简介
 
-RabbitMQ是使用Erlang语言开发的开源消息队列系统，基于AMQP协议来实现。AMQP的主要特征是面向消息、队列、路由（包括点对点和发布/订阅）、可靠性、安全。AMQP协议更多用在企业系统内对数据一致性、稳定性和可靠性要求很高的场景，对性能和吞吐量的要求还在其次。
+RabbitMQ是使用Erlang语言开发的开源消息队列系统，基于AMQP协议来实现。AMQP的主要特征是面向消息、队列、路由（包括点对点和发布/订阅）、可靠性、安全。
+
+AMQP协议更多用在企业系统内对数据一致性、稳定性和可靠性要求很高的场景，对性能和吞吐量的要求还在其次。
 
 优点：可靠性高，延迟低
 
@@ -95,6 +97,38 @@ rabbitmqctl add_vhost <vhost_name>：添加一个新的虚拟主机
 
 ## 集群
 
+### 集群发现
+
+RabbitMQ集群节点通过Peer Discovery互相发现
+
+
+
+RabbitMQ本身提供以下方式发现：
+
++ 配置文件
++ 预置的 DNS 记录
+
+
+
+RabbitMQ插件提供以下发现方式：
+
++ AWS（EC2）
++ K8S
++ consul
++ etcd
+
+相关：[Cluster Formation and Peer Discovery — RabbitMQ](https://www.rabbitmq.com/cluster-formation.html)
+
+### 集群模式
+
+RabbitMQ集群支持普通模式和集群模式：
+
++ 普通模式：集群各节点只同步数据结构（队列结构），不同步消息。当客户端访问当前节点，发现该节点没有队列消息，临时去其他接口同步消息。
+
++ 镜像模式：集群各节点同步数据结构和消息，镜像模式通过队列镜像来同步队列，现在推荐使用Quorum Queues而不是经典队列镜像
+
 ## 参考
 
 [RabbitMQ基础复习 - 掘金 (juejin.cn)](https://juejin.cn/post/7248914499914481725?searchId=202307171110097CEC7B6AC00F6705B0AF)
+
+[MQ黄金三剑客：RabbitMQ、RocketMQ和Kafka深入解密常见问题及功能对比指南？ - 掘金 (juejin.cn)](https://juejin.cn/post/7254267283249840184?searchId=20230719083155D35805FB8ACA0F16890C)
