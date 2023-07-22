@@ -21,14 +21,32 @@ Liquibase 是一个开源的数据库迁移工具，它提供了一种可靠和�
 引入依赖
 
 ```xml
-<plugin>
-    <groupId>org.liquibase</groupId>
-    <artifactId>liquibase-maven-plugin</artifactId>
-    <version>4.2.0</version>
-    <configuration>
-        <propertyFile>liquibase.properties</propertyFile>
-    </configuration>
-</plugin>
+  <build>
+     <pluginManagement>
+       <plugins>
+         <plugin>
+          <!--start with basic information to get Liquibase plugin:
+          include <groupId>, <artifactID>, and <version> elements-->
+        	 <groupId>org.liquibase</groupId>
+             <artifactId>liquibase-maven-plugin</artifactId>
+          	 <version>4.23.0</version>
+             <configuration>
+            <!--set values for Liquibase properties and settings
+            for example, the location of a properties file to use-->
+             	<propertyFile>liquibase.properties</propertyFile>
+          	</configuration>
+        <dependencies>
+            <!--set up any dependencies for Liquibase to function in your environment for example, a database-specific plugin-->
+            <dependency>
+              <groupId>com.h2database</groupId>
+              <artifactId>h2</artifactId>
+              <version>2.1.214</version>
+            </dependency>
+          </dependencies>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
 ```
 
 配置
