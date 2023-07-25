@@ -95,6 +95,15 @@ rabbitmqctl list_vhosts：列出当前RabbitMQ服务器上的所有虚拟主机
 
 rabbitmqctl add_vhost <vhost_name>：添加一个新的虚拟主机
 
+#### 队列
+
+rabbitmqctl list_queues:列出队列
+```shell
+rabbitmqctl list_queues name messages consumers state -p vhost-name
+name messages consumers state 都为可选参数，表示队列信息
+vhost-name 是vhost名，可以使通配符，例如 '.*'
+```
+
 ## 集群
 
 ### 集群发现
