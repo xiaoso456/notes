@@ -24,7 +24,7 @@ auth：认证权限模块
 
 client：
 
-cmdb：
+cmdb：解决元数据存储，与三方 CMDB 系统对接问题
 
 common：
 
@@ -36,7 +36,7 @@ console：
 
 console-ui：控制台前端
 
-core：
+core：核心模块
 
 distribution：
 
@@ -52,7 +52,232 @@ sys：
 
 test：
 
+## 隔离模型
 
+nacos采用了company，namespace，group，service四级隔离模型
+
+```mermaid
+graph TB
+    subgraph companyA["公司A"]
+        direction TB
+        subgraph namespaceA["namespaceA"]
+            direction TB  
+            subgraph groupA["groupA"]
+                direction TB
+                subgraph service1["service1"]
+                end
+            end
+        end
+    end
+    
+    subgraph companyB["公司B"]
+        direction TB
+        subgraph namespaceB["namespaceB"]
+            direction TB
+            subgraph groupB["groupB"]
+                direction TB
+                subgraph service9["service9"]
+                end
+            end
+        end
+    end
+```
+
+
+
+
+
+## 配置中心
+
+### 长轮询的实现
+
+nacos 1.x 中采用长轮询实现监听配置变化
+
+url：`/nacos/v1/cs/configs/listener`
+
+长轮询监听配置的方法如下，当前方法不会返回数据，而是调用长轮询方法，当数据有变化时在 response 里写数据返回
+
+```java
+@PostMapping("/listener")
+@Secured(action = ActionTypes.READ, parser = ConfigResourceParser.class)
+public void listener(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+    request.setAttribute("org.apache.catalina.ASYNC_SUPPORTED", true);
+    // 获取监听配置的字符串
+    String probeModify = request.getParameter("Listening-Configs");
+    if (StringUtils.isBlank(probeModify)) {
+        throw new IllegalArgumentException("invalid probeModify");
+    }
+
+    probeModify = URLDecoder.decode(probeModify, Constants.ENCODE);
+
+    Map<String, String> clientMd5Map;
+    try {
+        clientMd5Map = MD5Util.getClientMd5Map(probeModify);
+    } catch (Throwable e) {
+        throw new IllegalArgumentException("invalid probeModify");
+    }
+
+    // do long-polling
+    inner.doPollingConfig(request, response, clientMd5Map, probeModify.length());
+}
+
+```
+
+```java
+   public String doPollingConfig(HttpServletRequest request, HttpServletResponse response,
+            Map<String, String> clientMd5Map, int probeRequestSize) throws IOException {
+        
+        // Long polling.
+        if (LongPollingService.isSupportLongPolling(request)) {
+            longPollingService.addLongPollingClient(request, response, clientMd5Map, probeRequestSize);
+            return HttpServletResponse.SC_OK + "";
+        }
+        // 不支持长轮询，直接返回
+        // Compatible with short polling logic.
+        List<String> changedGroups = MD5Util.compareMd5(request, response, clientMd5Map);
+        
+        // Compatible with short polling result.
+        String oldResult = MD5Util.compareMd5OldResult(changedGroups);
+        String newResult = MD5Util.compareMd5ResultString(changedGroups);
+        
+        String version = request.getHeader(Constants.CLIENT_VERSION_HEADER);
+        if (version == null) {
+            version = "2.0.0";
+        }
+        int versionNum = Protocol.getVersionNumber(version);
+        
+        // Before 2.0.4 version, return value is put into header.
+        if (versionNum < START_LONG_POLLING_VERSION_NUM) {
+            response.addHeader(Constants.PROBE_MODIFY_RESPONSE, oldResult);
+            response.addHeader(Constants.PROBE_MODIFY_RESPONSE_NEW, newResult);
+        } else {
+            request.setAttribute("content", newResult);
+        }
+        
+        Loggers.AUTH.info("new content:" + newResult);
+        
+        // Disable cache.
+        response.setHeader("Pragma", "no-cache");
+        response.setDateHeader("Expires", 0);
+        response.setHeader("Cache-Control", "no-cache,no-store");
+        response.setStatus(HttpServletResponse.SC_OK);
+        return HttpServletResponse.SC_OK + "";
+    }
+```
+
+下面是长轮询实现，首先检测配置是否发生了变化，如果发生了变化，直接返回。否则开启长轮询异步返回
+
+```java
+    /**
+     * Add LongPollingClient.
+     *
+     * @param req              HttpServletRequest.
+     * @param rsp              HttpServletResponse.
+     * @param clientMd5Map     clientMd5Map.
+     * @param probeRequestSize probeRequestSize.
+     */
+    public void addLongPollingClient(HttpServletRequest req, HttpServletResponse rsp, Map<String, String> clientMd5Map,
+            int probeRequestSize) {
+        
+        String str = req.getHeader(LongPollingService.LONG_POLLING_HEADER);
+        String noHangUpFlag = req.getHeader(LongPollingService.LONG_POLLING_NO_HANG_UP_HEADER);
+        String appName = req.getHeader(RequestUtil.CLIENT_APPNAME_HEADER);
+        String tag = req.getHeader("Vipserver-Tag");
+        int delayTime = SwitchService.getSwitchInteger(SwitchService.FIXED_DELAY_TIME, 500);
+        
+        // Add delay time for LoadBalance, and one response is returned 500 ms in advance to avoid client timeout.
+        long timeout = Math.max(10000, Long.parseLong(str) - delayTime);
+        if (isFixedPolling()) {
+            timeout = Math.max(10000, getFixedPollingInterval());
+            // Do nothing but set fix polling timeout.
+        } else {
+            long start = System.currentTimeMillis();
+            List<String> changedGroups = MD5Util.compareMd5(req, rsp, clientMd5Map);
+            if (changedGroups.size() > 0) {
+                generateResponse(req, rsp, changedGroups);
+                LogUtil.CLIENT_LOG.info("{}|{}|{}|{}|{}|{}|{}", System.currentTimeMillis() - start, "instant",
+                        RequestUtil.getRemoteIp(req), "polling", clientMd5Map.size(), probeRequestSize,
+                        changedGroups.size());
+                return;
+            } else if (noHangUpFlag != null && noHangUpFlag.equalsIgnoreCase(TRUE_STR)) {
+                LogUtil.CLIENT_LOG.info("{}|{}|{}|{}|{}|{}|{}", System.currentTimeMillis() - start, "nohangup",
+                        RequestUtil.getRemoteIp(req), "polling", clientMd5Map.size(), probeRequestSize,
+                        changedGroups.size());
+                return;
+            }
+        }
+        String ip = RequestUtil.getRemoteIp(req);
+        
+        // Must be called by http thread, or send response.
+        final AsyncContext asyncContext = req.startAsync();
+        
+        // AsyncContext.setTimeout() is incorrect, Control by oneself
+        asyncContext.setTimeout(0L);
+        
+        ConfigExecutor.executeLongPolling(
+                new ClientLongPolling(asyncContext, clientMd5Map, ip, probeRequestSize, timeout, appName, tag));
+    }
+```
+
+新建了一个clientLongPolling的任务，作用是
+
+1. 新建了一个任务，把当前任务放到了队列`allSubs`里
+2. 延迟29.5s执行一个任务：尝试删除队列里当前任务
+   + 如果删除失败，说明任务已经被执行
+   + 如果删除成功，说明任务还未被执行，检查一下配置是否发生了变化，如果变化，推送变化数据，如果没变化，推送null数据
+
+这个队列`allSubs`是公用队列，如果配置发生了变化，会触发一个事件，并调用相应队列的方法，返回结果
+
+```java
+    class ClientLongPolling implements Runnable {
+        
+        @Override
+        public void run() {
+            asyncTimeoutFuture = ConfigExecutor.scheduleLongPolling(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        getRetainIps().put(ClientLongPolling.this.ip, System.currentTimeMillis());
+                        
+                        // Delete subsciber's relations.
+                        boolean removeFlag = allSubs.remove(ClientLongPolling.this);
+                        
+                        if (removeFlag) {
+                            if (isFixedPolling()) {
+                                LogUtil.CLIENT_LOG
+                                        .info("{}|{}|{}|{}|{}|{}", (System.currentTimeMillis() - createTime), "fix",
+                                                RequestUtil.getRemoteIp((HttpServletRequest) asyncContext.getRequest()),
+                                                "polling", clientMd5Map.size(), probeRequestSize);
+                                List<String> changedGroups = MD5Util
+                                        .compareMd5((HttpServletRequest) asyncContext.getRequest(),
+                                                (HttpServletResponse) asyncContext.getResponse(), clientMd5Map);
+                                if (changedGroups.size() > 0) {
+                                    sendResponse(changedGroups);
+                                } else {
+                                    sendResponse(null);
+                                }
+                            } else {
+                                LogUtil.CLIENT_LOG
+                                        .info("{}|{}|{}|{}|{}|{}", (System.currentTimeMillis() - createTime), "timeout",
+                                                RequestUtil.getRemoteIp((HttpServletRequest) asyncContext.getRequest()),
+                                                "polling", clientMd5Map.size(), probeRequestSize);
+                                sendResponse(null);
+                            }
+                        } else {
+                            LogUtil.DEFAULT_LOG.warn("client subsciber's relations delete fail.");
+                        }
+                    } catch (Throwable t) {
+                        LogUtil.DEFAULT_LOG.error("long polling error:" + t.getMessage(), t.getCause());
+                    }
+                    
+                }
+                
+            }, timeoutTime, TimeUnit.MILLISECONDS);
+            
+            allSubs.add(this);
+        }
+```
 
 
 

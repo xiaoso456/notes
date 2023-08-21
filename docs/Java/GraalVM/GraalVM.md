@@ -255,6 +255,72 @@ mvn -Pnative -DskipTests package
 
 
 
+如果不使用 parent 引入，可以参考 parent 的默认配置
+
+```xml
+	<profile>
+      <id>native</id>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-jar-plugin</artifactId>
+              <configuration>
+                <archive>
+                  <manifestEntries>
+                    <Spring-Boot-Native-Processed>true</Spring-Boot-Native-Processed>
+                  </manifestEntries>
+                </archive>
+              </configuration>
+            </plugin>
+            <plugin>
+              <groupId>org.springframework.boot</groupId>
+              <artifactId>spring-boot-maven-plugin</artifactId>
+              <configuration>
+                <image>
+                  <builder>paketobuildpacks/builder:tiny</builder>
+                  <env>
+                    <BP_NATIVE_IMAGE>true</BP_NATIVE_IMAGE>
+                  </env>
+                </image>
+              </configuration>
+              <executions>
+                <execution>
+                  <id>process-aot</id>
+                  <goals>
+                    <goal>process-aot</goal>
+                  </goals>
+                </execution>
+              </executions>
+            </plugin>
+            <plugin>
+              <groupId>org.graalvm.buildtools</groupId>
+              <artifactId>native-maven-plugin</artifactId>
+              <configuration>
+                <classesDirectory>${project.build.outputDirectory}</classesDirectory>
+                <metadataRepository>
+                  <enabled>true</enabled>
+                </metadataRepository>
+                <requiredVersion>22.3</requiredVersion>
+              </configuration>
+              <executions>
+                <execution>
+                  <id>add-reachability-metadata</id>
+                  <goals>
+                    <goal>add-reachability-metadata</goal>
+                  </goals>
+                </execution>
+              </executions>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+    </profile>
+```
+
+
+
 ##### 构建 docker 镜像
 
 需要环境安装了 docker，会生成一个 docker 镜像
