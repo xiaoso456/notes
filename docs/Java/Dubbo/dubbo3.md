@@ -651,6 +651,46 @@ public class TripleConsumer {
 
 依次执行，可以看到结果
 
+## Dubbo Admin
+
+Admin 是服务治理控制面中的一个核心组件，负责微服务集群的服务治理、可视化展示等
+
+![admin-core-components.png](./assets/admin-core-components.png)
+
+总体上来说，Admin 部署架构分为以下几个部分：
+
+- Admin 主进程，包括服务发现元数据管理、可视化控制台、安全认证策略管控、其他定制化服务治理能力等组件。
+- 强依赖组件，包括 Mysql 数据库、注册/配置/元数据中心（可以是 Kubernetes、Nacos、Zookeeper 等）
+- 可选依赖组件，包括 Prometheus、Grafana、Zipkin 等
+
+
+
+### 源码启动
+
+dubbo admin目前不提供二进制包，可以通过源码/docker镜像/k8s helm 安装，这里使用源码启动
+
+```sh
+git clone https://github.com/apache/dubbo-admin.git
+```
+
+maven 编译打包
+
+```
+mvn package -Dmaven.test.skip=true -f pom.xml
+```
+
+启动 dubbo-admin-sever 模块主程序
+
+
+
+## dubbo 模型
+
+
+
 ## 参考
 
 [Dubbo 文档 | Apache Dubbo](https://cn.dubbo.apache.org/zh-cn/overview/home/#)
+
+[Dubbo3.0入门教程 - 掘金 (juejin.cn)](https://juejin.cn/post/7258847745527791676)
+
+[精选｜Dubbo异步化实践 - 掘金 (juejin.cn)](https://juejin.cn/post/7242476048005218359?searchId=20231004202749276F001D7D462446D2EE)
