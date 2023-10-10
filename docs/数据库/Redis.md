@@ -122,7 +122,7 @@ Redis 事务只保证命令执行的顺序性，不保证执行成功与否，�
 
 ### Redis和数据库的同步策略
 
-- 方案1：通过MySQL自动同步刷新Redis，MySQL触发器+UDF函数实现（UDF函数可以把数据写入Redis中，从而达到同步的效果）
+- 方案1：通过MySQL自动同步刷新Redis，MySQL触发器+UDF函数（自定义函数）实现（UDF函数可以把数据写入Redis中，从而达到同步的效果）
 - 方案2：解析MySQL的binlog实现，将数据库中的数据同步到Redis
 
 ### 集群
@@ -241,6 +241,16 @@ redis-cli --cluster create 127.0.0.1:7000 127.0.0.1:7001 \
 
 Tips:k8s环境下创建集群可以是一个sh脚本的job，查所有的pod获取pod ip，然后创建集群
 
+## 数据设计
+
+### 缓存key设计
+
+redis 是 kv 数据库，没有xx库，xx表之类诸多的概念，如果所有业务系统可以共享一个空间，需要避免 key 重复
+
+一种方法 key 命名方法是 ： `业务名:表名:keyName`
+
+这么做的一个好处是可以使用通配符删除某个业务，某个表所有key
+
 ## 参考
 
 [k8s部署redis集群(一) - 掘金 (juejin.cn)](https://juejin.cn/post/7202272345833914428?searchId=202310052032385BDE2CAE88106AF380A4)
@@ -250,3 +260,5 @@ Tips:k8s环境下创建集群可以是一个sh脚本的job，查所有的pod获�
 [使用 Redis 集群进行扩展](https://redis.io/docs/management/scaling/#create-a-redis-cluster)
 
 [K8S部署Redis集群-v7.0.12（5）_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1F8411o7n6/)
+
+[记一种不错的缓存设计思路 - 掘金 (juejin.cn)](https://juejin.cn/post/7271597656118394899)
