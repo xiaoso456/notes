@@ -46,6 +46,57 @@ skywalking 主要提供功能如下：
 
 ![image-20230625210610081](./assets/image-20230625210610081.png)
 
+## K8S环境安装
+
+k8s可以使用 helm 安装 skywalking：[apache/skywalking-helm at v4.5.0 (github.com)](https://github.com/apache/skywalking-helm/tree/v4.5.0)
+
+skywalking 一般使用 elasticsearch作为存储后端
+
+1. 用helm安装一个测试用 elasticsearch,账号为`elastic `,密码为`elastic`
+
+helm：[弹性搜索 8.5.1 ·弹性/弹性 (artifacthub.io)](https://artifacthub.io/packages/helm/elastic/elasticsearch)
+
+```sh
+helm repo add elastic https://helm.elastic.co
+helm install es-skywalking elastic/elasticsearch \
+--version 7.17.3 \
+-n skywalking-demo --create-namespace \
+--set replicas=1 \
+--set volumeClaimTemplate.resources.requests.storage=1Gi \
+--set secret.password='elastic' 
+```
+
+2. 部署 skywalking
+
+```sh
+helm install skywalking \
+  oci://registry-1.docker.io/apache/skywalking-helm \
+  --version "4.5.0" \
+  -n "skywalking-demo" \
+  --create-namespace \
+  --set oap.image.tag=9.2.0 \
+  --set oap.storageType=elasticsearch \
+  --set ui.image.tag=9.2.0 \
+  --set elasticsearch.enabled=false \
+  --set elasticsearch.config.host="elasticsearch-master.skywalking-demo" \
+  --set elasticsearch.config.user="elastic" \
+  --set elasticsearch.config.password="elastic" \
+  --set oap.replicas=1 \
+  --set oap.javaOpts="-Xmx512m -Xms512m"
+```
+
+
+
+卸载：
+
+```
+helm uninstall skywalking -n skywalking-demo
+helm uninstall es-skywalking -n skywalking-demo
+
+```
+
+
+
 ## 组件
 
 ### 基础组件
@@ -160,6 +211,8 @@ spec:
         - name: JAVA_TOOL_OPTIONS
           value: "-javaagent:/skywalking/agent/skywalking-agent.jar"
 ```
+
+启动 agent 时，如果 skywalking 地址不为默认，可在 `config/agent.config` 修改
 
 ### 手动跟踪
 
