@@ -3,13 +3,7 @@
 async tool 是京东开源的Java并发编排工具，用于解决任意的多线程并行、串行、阻塞、依赖、回调的并发框架，可以任意组合各线程的执行顺序，带全链路回调和超时控制。
 
 ## 基本组件
-```mermaid
-sequenceDiagram
-Alice->John: Hello John, how are you?
-loop every minute
-  John-->Alice: Great!
-end
-```
+
 ### worker
 
 worker 是最小任务执行单位，通常是一个网络调用，或一段耗时操作。
