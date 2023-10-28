@@ -158,6 +158,17 @@ helm uninstall es-skywalking -n skywalking-demo
 
 其他情况可以参考：[Setup java agent | Apache SkyWalking](https://skywalking.apache.org/docs/skywalking-java/v8.16.0/en/setup/service-agent/java-agent/readme/)
 
+### 启动配置
+
+使用agent启动后，会把跟踪获取到的信息上传到 skywalking 后端，默认情况下上传到本地 `127.0.0.1:11800`，可以通过环境变量配置
+
+```
+# 配置SW后端
+SW_AGENT_COLLECTOR_BACKEND_SERVICES=192.168.229.128:31516
+# 配置上传到SW后端的应用名
+SW_AGENT_NAME=midi
+```
+
 ### 容器环境
 
 #### 使用 skywalking jdk 构建镜像
