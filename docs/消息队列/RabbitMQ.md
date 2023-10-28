@@ -73,31 +73,31 @@ RabbitMQ命令工具主要有以下几种：
 
 #### 管理
 
-rabbitmqctl list_connections：列出当前RabbitMQ服务器上的所有连接
+`rabbitmqctl list_connections`：列出当前RabbitMQ服务器上的所有连接
 
 #### 用户
 
-rabbitmqctl list_users：列出当前RabbitMQ服务器上的所有用户
+`rabbitmqctl list_users`：列出当前RabbitMQ服务器上的所有用户
 
-rabbitmqctl add_user <username> <password>：添加一个新的用户，并设置密码。
+`rabbitmqctl add_user <username> <password>`：添加一个新的用户，并设置密码。
 
-rabbitmqctl delete_user <username>：删除指定的用户
+`rabbitmqctl delete_user <username>`：删除指定的用户
 
 #### 权限
 
-rabbitmqctl list_permissions：列出当前RabbitMQ服务器上的所有权限
+`rabbitmqctl list_permissions`：列出当前RabbitMQ服务器上的所有权限
 
-rabbitmqctl set_permissions -p <vhost_name> <username> <permission> <read_permission> <write_permission> <configure_permission>：为指定用户设置权限。
+`rabbitmqctl set_permissions -p <vhost_name> <username> <permission> <read_permission> <write_permission> <configure_permission>`：为指定用户设置权限。
 
 #### vhost
 
-rabbitmqctl list_vhosts：列出当前RabbitMQ服务器上的所有虚拟主机
+`rabbitmqctl list_vhosts`：列出当前RabbitMQ服务器上的所有虚拟主机
 
-rabbitmqctl add_vhost <vhost_name>：添加一个新的虚拟主机
+`rabbitmqctl add_vhost <vhost_name>`：添加一个新的虚拟主机
 
 #### 队列
 
-rabbitmqctl list_queues:列出队列
+`rabbitmqctl list_queues`:列出队列
 ```shell
 rabbitmqctl list_queues name messages consumers state -p vhost-name
 name messages consumers state 都为可选参数，表示队列信息

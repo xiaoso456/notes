@@ -2,6 +2,7 @@ import {defaultTheme, defineUserConfig, viteBundler} from 'vuepress'
 import {searchPlugin} from "@vuepress/plugin-search";
 import {googleAnalyticsPlugin} from "@vuepress/plugin-google-analytics";
 import {copyCodePlugin} from "vuepress-plugin-copy-code2";
+import {mdEnhancePlugin} from "vuepress-plugin-md-enhance";
 
 const base = "/notes"
 export default defineUserConfig({
@@ -16,6 +17,9 @@ export default defineUserConfig({
     ],
     description: 'xiaoso知识文档',
     plugins: [
+        mdEnhancePlugin({
+            mermaid: true,
+        }),
         // 搜索插件
         searchPlugin({
             // 搜索框显示文字
@@ -144,6 +148,10 @@ export default defineUserConfig({
                     {
                         text: 'MongoDB',
                         link: '/数据库/MongoDB.md'
+                    },
+                    {
+                        text: 'AsyncTool',
+                        link: '/Java/其他工具/AsyncTool.md'
                     }
                 ]
             },
