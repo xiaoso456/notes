@@ -632,7 +632,437 @@ prometheus_http_requests_total > 1
 
 **vector1 unless vector2** 会产生一个新的向量，新向量中的元素由 `vector1` 中没有与 `vector2` 匹配的元素组成。
 
+#### 匹配模式
+
+向量与向量之间进行运算操作，会基于默认规则进行匹配：选择与左边向量标签完全一致的右边向量，如果匹配失败，则直接丢弃。
+
+PromQL中有下面几种匹配模式：
+
++ 一对一
++ 多对一
++ 一对多
+
+##### 一对一
+
+一对一匹配是默认的匹配模式，一对一匹配会匹配op两边标签完全一致的sample
+
+```
+vector1 <operator> vector2
+```
+
+如果两边标签不一致，可以使用 `on(label list)` 和 `ignoring(label list)`来指定匹配行为
+
+`on`可以指定用于匹配的标签
+
+```
+<vector expr> <bin-op> on(<label list>) <vector expr>
+```
+
+`ignoreing`可以指定匹配时，忽略的标签
+
+```
+<vector expr> <bin-op> ignoring(<label list>) <vector expr>
+```
+
+例如输入：
+
+```
+method_code:http_errors:rate5m{method="get", code="500"}  24
+method_code:http_errors:rate5m{method="get", code="404"}  30
+method_code:http_errors:rate5m{method="put", code="501"}  3
+method_code:http_errors:rate5m{method="post", code="500"} 6
+method_code:http_errors:rate5m{method="post", code="404"} 21
+
+method:http_requests:rate5m{method="get"}  600
+method:http_requests:rate5m{method="del"}  34
+method:http_requests:rate5m{method="post"} 120
+```
+
+查询如下：
+
+```
+method_code:http_errors:rate5m{code="500"} / ignoring(code) method:http_requests:rate5m
+```
+
+结果如下：
+
+```
+{method="get"}  0.04            //  24 / 600
+{method="post"} 0.05            //   6 / 120
+```
+
+##### 多对一和一对多
+
+这种情况是，一侧的向量可以和另一个的多个向量匹配
+
+```
+<vector expr> <bin-op> ignoring(<label list>) group_left(<label list>) <vector expr>
+
+<vector expr> <bin-op> ignoring(<label list>) group_right(<label list>) <vector expr>
+
+<vector expr> <bin-op> on(<label list>) group_left(<label list>) <vector expr>
+
+<vector expr> <bin-op> on(<label list>) group_right(<label list>) <vector expr>
+```
+
+group 修饰符的left和right一般会指向基数更多的一侧
+
+例如：
+
+```
+method_code:http_errors:rate5m / ignoring(code) group_left method:http_requests:rate5m
+```
+
+```
+{method="get", code="500"}  0.04            //  24 / 600
+{method="get", code="404"}  0.05            //  30 / 600
+{method="post", code="500"} 0.05            //   6 / 120
+{method="post", code="404"} 0.175           //  21 / 120
+```
+
+左向量有method和code两个label，右向量有method一个label
+
+#### 聚合运算
+
+Prometheus 提供了下列内置的聚合操作符，这些操作符用于瞬时向量。可以将瞬时表达式返回的samples数据进行聚合，形成一个具有较少samples新的时间序列。
+
++ `sum` (求和)
+
++ `min` (最小值)
+
++ `max` (最大值)
+
++ `avg` (平均值)
+
++ `stddev` (标准差)
+
++ `stdvar` (标准差异)
+
++ `count` (计数)
+
++ `count_values` (对 value 进行计数)
+
++ `bottomk` (样本值最小的 k 个元素)
+
++ `topk` (样本值最大的k个元素)
+
++ `quantile` (分布统计)
+
+语法如下：
+
+```
+<aggr-op>([parameter,] <vector expression>) [without|by (<label list>)]
+```
+
+其中只有 `count_values`, `quantile`, `topk`, `bottomk` 支持参数(parameter)。
+
+`without` 用于从计算结果中移除列举的标签，而保留其它标签。`by` 则正好相反，结果向量中只保留列出的标签，其余标签则移除。通过 without 和 by 可以按照样本的问题对数据进行聚合。
+
+`without` 用于从计算结果中移除列举的标签，而保留其它标签。`by` 则正好相反，结果向量中只保留列出的标签，其余标签则移除。通过 without 和 by 可以按照样本的问题对数据进行聚合。
+
+例如：
+
+如果指标 `http_requests_total` 的时间序列的标签集为 `application`、 `instance`和 `group`，我们可以通过以下方式计算所有 instance 中每个 application 和 group 的请求总量：
+
+```
+sum(http_requests_total) without (instance)
+```
+
+等价于
+
+```
+ sum(http_requests_total) by (application, group)
+```
+
+
+
+如果只需要计算整个应用的 HTTP 请求总量，可以直接使用表达式：
+
+```
+sum(http_requests_total)
+```
+
+
+
+`count_values` 用于时间序列中每一个样本值出现的次数。count_values 会为每一个唯一的样本值输出一个时间序列，并且每一个时间序列包含一个额外的标签。这个标签的名字由聚合参数指定，同时这个标签值是唯一的样本值。
+
+例如原始数据如下：
+
+```
+
+prometheus_http_requests_total{code="200", handler="/-/ready", instance="localhost:9090", job="prometheus"}
+1
+prometheus_http_requests_total{code="200", handler="/api/v1/label/:name/values", instance="localhost:9090", job="prometheus"}
+1
+prometheus_http_requests_total{code="200", handler="/api/v1/metadata", instance="localhost:9090", job="prometheus"}
+3
+prometheus_http_requests_total{code="200", handler="/api/v1/query", instance="localhost:9090", job="prometheus"}
+7
+prometheus_http_requests_total{code="200", handler="/favicon.ico", instance="localhost:9090", job="prometheus"}
+1
+prometheus_http_requests_total{code="200", handler="/graph", instance="localhost:9090", job="prometheus"}
+1
+prometheus_http_requests_total{code="200", handler="/manifest.json", instance="localhost:9090", job="prometheus"}
+1
+prometheus_http_requests_total{code="200", handler="/metrics", instance="localhost:9090", job="prometheus"}
+13
+prometheus_http_requests_total{code="200", handler="/static/*filepath", instance="localhost:9090", job="prometheus"}
+3
+prometheus_http_requests_total{code="302", handler="/", instance="localhost:9090", job="prometheus"}
+1
+prometheus_http_requests_total{code="400", handler="/api/v1/query", instance="localhost:9090", job="prometheus"}
+2
+prometheus_http_requests_total{code="422", handler="/api/v1/query", instance="localhost:9090", job="prometheus"}
+1
+
+```
+
+使用如下表达式查询：
+
+```
+count_values("total",prometheus_http_requests_total)
+```
+
+返回结果如下：
+
+```
+{total="1"}7 # sample值为1的有7个
+{total="3"}2
+{total="7"}1
+{total="13"}1
+{total="2"}1
+```
+
+
+
+`topk` 和 `bottomk` 则用于对样本值进行排序，返回当前样本值前 n 位，或者后 n 位的时间序列。
+
+获取 HTTP 请求数前 5 位的时序样本数据，可以使用表达式：
+
+```
+topk(5, prometheus_http_requests_total)
+```
+
+
+
+`quantile` 用于计算当前样本数据值的分布情况 quantile(φ, express) ，其中 `0 ≤ φ ≤ 1`。
+
+例如，当 φ 为 0.5 时，即表示找到当前样本数据中的中位数：
+
+```
+quantile(0.5, prometheus_http_requests_total)
+```
+
+#### 运算优先级
+
+1. `^`
+2. `*`、`/`、`%`
+3. `+`、`-`
+4. `==`、`!=`、`<=`、`<`、`>=`、`>`
+5. `and`、`unless`
+6. `or`
+
 ### 函数
+
++ `abs(v instant-vector)`
+
+  求绝对值
+
++ `absent(v instant-vector)`
+
+  如果向量有sample，返回空向量；如果传递的向量参数没有样本数据，则返回不带metrics name且带有label的时间序列，且sample值为1
+
++ `ceil(v instant-vector)`
+
+  对向量所有samples向上取整
+
++ `changes(v range-vector)`
+
+  求这个区间向量内每个样本数据值变化的次数，结果为瞬时向量
+  
++ `clamp_max(v instant-vector, max scalar)`
+
+  输入一个瞬时向量和最大值，若sample数据值若大于 max，则新向量sample为 max，否则不变。
+
+  简单来说就是设置最大上限
+
++ `clamp_min(v instant-vector, min scalar)`
+
+  输入一个瞬时向量和最小值，sample数据值若小于 min，则改为 min，否则不变
+
+  简单来说就是设置下限
+
++ `day_of_month(v=vector(time()) instant-vector)`
+
+  被给定 UTC 时间所在月的第几天。返回值范围：1~31。
+
++ `day_of_week(v=vector(time()) instant-vector) `
+
+   返回UTC中每个给定时间的星期几。返回值是从0到6，其中0表示星期日
+
++ `days_in_month(v=vector(time()) instant-vector)`
+
+  返回UTC中每个给定时间的月份中的天数。返回值是28到31
+
++ `delta(v range-vector) `
+
+  计算范围向量v中每个时间序列元素的第一个值与最后一个值之间的差，并返回具有给定增量和相同label的瞬时向量。delta 应仅与Gauge一起使用
+
++ `deriv(v range-vector)`
+
+   使用简单的线性回归计算区间向量 v 中各个时间序列的导数。
+
+   这个函数一般只用在 Gauge 类型的时间序列上。
+
++ `exp(v instant-vector)`
+
+  求各个样本值的 `e` 的指数值，即 e 的 N 次方。当 N 的值足够大时会返回 `+Inf`。特殊情况为：
+
+  + `Exp(+Inf) = +Inf`
+
+  + `Exp(NaN) = NaN`
+
++ `floor(v instant-vector)`
+
+  对瞬时向量v所有sample向下取整
+
++ `hour(v=vector(time()) instant-vector)`
+
+   返回UTC中每个给定时间的一天中的小时。返回值是从0到23
+
++ `idelta(v range-vector)`
+
+  计算范围向量v中最后两个sample之间的差，并返回具有给定增量和相同标签的瞬时向量。idelta 应仅与Gauge一起使用
+
++ `increase(v range-vector)`
+
+  计算范围向量v中两个sample之间的增长量。单调性中断（例如由于目标重新启动而导致的计数器重置）会自动进行调整。increase 应仅与Counter一起使用
+
++ `irate(v range-vector)`
+
+  计算范围向量v中两个sample之间的瞬时增长率。单调性中断（例如由于目标重新启动而导致的计数器重置）会自动进行调整
+
++ `label_join(v instant-vector, dst_label string, separator string, src_label_1 string, src_label_2 string, ...)`
+
+   对于瞬时向量v中的每个时间序列，使用分隔符separator将所有源标签src_labels的值连接在一起，并返回带有标签值的目的标签dst_label的时间序列。src_labels可以有任意多个
+
++ `label_replace(v instant-vector, dst_label string, replacement string, src_label string, regex string)`
+
+  对于瞬时向量v中的每个时间序列，使用正则表达式regex匹配标签 src_label。如果匹配，则返回时间序列，并将标签dst_label替换为replacement的扩展。$1用第一个匹配的子组替换，$2再用第二个匹配的子组替换。如果正则表达式不匹配，则时间序列不变
+
++ `max_over_time(range-vector)`
+
+  指定时间间隔内范围向量所有samples值的最大值
+
++ `min_over_time(range-vector)`
+
+   指定时间间隔内范围向量所有samples值的最小值
+
++ `minute(v=vector(time()) instant-vector)` 
+
+  返回UTC中每个给定时间的小时分钟。返回值是从0到59
+
++ `month(v=vector(time()) instant-vector)`
+
+   返回UTC中每个给定时间的一年中的月份。返回值是从1到12，其中1表示一月
+
++ `rate(v range-vector)`   
+
+   计算范围向量v中时间序列的平均增长率。单调性中断（例如由于目标重新启动而导致的计数器重置）会自动进行调整
+
++ `resets(v range-vector)`
+
+  对于范围向量v中的每个时间序列，将提供的时间范围内的计数器重置次数作为瞬时向量返回，两个连续样本之间值的任何下降都被视为计数器重置。resets 应仅与Counter一起使用
+
++ `round(v instant-vector, to_nearest=1 scalar)`  
+
+  将即时向量v中所有元素的样本值四舍五入为最接近的整数
+
++ `scalar(v instant-vector)`
+
+  给定只包含一个sample瞬时向量v，返回该单个sample值作为标量。如果瞬时向量v不是只包含单个sample的向量，scalar则将返回NaN
+
++ `sort(v instant-vector)` 
+
+    将瞬时向量v中按sample值升序排列
+
++ `sort_desc(v instant-vector)`   
+
+    与sort相同，但以降序排列
+
++ `sum_over_time(range-vector)` 
+
+  指定时间间隔内范围向量所有sample值的总和 
+
++ `time()`
+
+    返回自1970年1月1日UTC以来的秒数
+
++ `timestamp(v instant-vector)`
+
+  返回瞬时向量v的每个样本的时间戳，作为自1970年1月1日UTC以来的秒数
+
++ `vector(s scalar)`
+
+   返回标量s作为不带标签的向量
+
++ `year(v=vector(time()) instant-vector)`   
+
+     返回UTC中每个给定时间的年份
+
+ ## 整合
+
+### SpringBoot应用
+
+添加maven依赖
+
+```xml
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+        </dependency>
+```
+
+添加 bean
+
+```java
+    @Bean
+    MeterRegistryCustomizer<MeterRegistry> configurer(@Value("${spring.application.name}") String applicationName) {
+        return (registry) -> registry.config().commonTags("application", applicationName);
+    }
+```
+
+在application.yml添加配置，暴露所有端点
+
+```yaml
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  metrics:
+    tags:
+      application: "${spring.application.name}"
+```
+
+此时访问`/actuator/prometheus`即可获取提供给 prometheus 指标
+
+修改 prometheus.yml 抓取地址
+
+```yaml
+scrape_configs:
+  - job_name: "springboot-application"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["localhost:8787"]    
+```
+
+使用 grafana 导入监控面板：[JVM Micrometer ](https://grafana.com/grafana/dashboards/4701-jvm-micrometer/)
 
 
 
@@ -643,3 +1073,5 @@ https://www.bilibili.com/video/BV17v4y1H76R/
 [Introduction · Prometheus中文技术文档](https://www.prometheus.wang/)
 
 [序言 - Prometheus 中文文档 (fuckcloudnative.io)](https://prometheus.fuckcloudnative.io/)
+
+[Overview | Prometheus](https://prometheus.io/docs/introduction/overview/)
