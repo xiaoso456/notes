@@ -16,7 +16,7 @@ DataStream 是不可变的，一旦被创建，不能添加或删除
 
 Flink 一个流的并行度，可以认为是算子中最大的并行度
 
-### 算子链
+### 算子链 operator chain
 
 oneToOne（web ui 图显示为 forwarding） 一对一关系，不需要调整数据顺序，不需要重分区
 
@@ -36,7 +36,13 @@ Flink 为流式/批式处理应用程序的开发提供了不同级别的抽象�
 
 ![Programming levels of abstraction](https://nightlies.apache.org/flink/flink-docs-master/fig/levels_of_abstraction.svg)
 
+### Dataflow模型
 
+Dataflow模型提出了一套可行的流批处理模型，对于无序流提出一套基于时间（Event Time）、水位线（Watermark）和延迟处理机制，从而实现窗口（Window）聚合计算能力
+
+### Watermark
+
+Watermark表示一个事件时间点，流处理的同步信号，用于触发下游算子
 
 ## 程序构成
 
@@ -138,3 +144,5 @@ TaskManager收到Job后，分配给TaskManager
 ## 参考
 
 [概览 | Apache Flink](https://nightlies.apache.org/flink/flink-docs-release-1.16/zh/docs/dev/datastream/overview/)
+
+Flink入门与实战
