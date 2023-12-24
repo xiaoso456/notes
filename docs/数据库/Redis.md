@@ -249,6 +249,25 @@ redis 是 kv 数据库，没有xx库，xx表之类诸多的概念，如果所有
 
 这么做的一个好处是可以使用通配符删除某个业务，某个表所有key
 
+## 使用
+
+### 快速部署
+
+#### k8s 
+
+参考：[redis 18.5.0 · bitnami/bitnami (artifacthub.io)](https://artifacthub.io/packages/helm/bitnami/redis)
+
+快速启动单节点：
+
+1. 添加helm仓库`helm repo add bitnami https://charts.bitnami.com/bitnami`
+2. helm 安装`helm install my-redis bitnami/redis --version 18.5.0 --set architecture=standalone --set-string auth.password=123456 `
+
+卸载：`helm uninstall my-redis`
+
+### Java lettuce客户端
+
+
+
 ## 参考
 
 [k8s部署redis集群(一) - 掘金 (juejin.cn)](https://juejin.cn/post/7202272345833914428?searchId=202310052032385BDE2CAE88106AF380A4)

@@ -293,6 +293,8 @@ sink 用于定义 SeaTunnel 把数据写到哪里，目前支持的 sink 可以�
 
 当定义了多个 source 和多个 sink 时,每个 sink 会读取哪些数据,每个 transform 会读取哪些数据?我们使用 result_table_name 和 source_table_name 这两个关键配置。每个 source 模块都将使用 result_table_name 来配置，表示数据源生成的数据名称，其他的 transform 和 sink 模块可以使用 source_table_name 引用对应的数据源名称，表示我要读取这些数据进行处理。然后 transform，作为中间处理模块，同时可以使用 result_table_name 和 source_table_name 这两个配置。在上述 Config 示例中,并不是每个模块都配置了这两个参数，因为在 SeaTunnel 中有一个默认约定：如果没有配置这两个参数,那么上一个节点最后一个模块生成的数据将被使用。这在只有一个 source 时会更方便。
 
+
+
 ## 参考
 
 [Apache SeaTunnel | Apache SeaTunnel](https://seatunnel.apache.org/)
