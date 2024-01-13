@@ -22,7 +22,7 @@ Kafka在实时数据处理、日志收集、流式处理、事件驱动架构等
 
   原因：集群中，对外提供服务的controller只有一个，负载大，容易崩溃进而重新选举对外服务节点。如果集群元数据很多，故障转移代价大
 
-+ 
+  
 
 ## 消息模型
 
@@ -30,7 +30,7 @@ Broker：一个 Kafka 节点
 
 Controller ：Broker中对外提供服务
 
-Topic：某种类型消息的合集
+Topic：某种类型消息的集合，一个topic由多个partition组成
 
 Partition：Topic的物理分组，Partition 可能会分散在不同Broker上，单个Partition保证消息有序
 
@@ -38,11 +38,13 @@ Segment：Segment是一种物理存储结构，用于持久化保存消息。Seg
 
 Offset：来标识一个Consumer在一个特定分区（Partition）中的消费位置。它是一个表示消息在分区中的唯一位置的数字。每个分区都有自己独立的偏移量序列。
 
-Replica（N）：每个 Partition 都会有 N 个完全相同的冗余备份，分散在不同机器
+Replica（N）：每个 Partition 都会有 N 个完全相同的冗余备份，分散在不同机器，只有leader replica 提供给客户端
 
 Producer：通过 Broker 发布新的消息到某个 Topic 中
 
 Consumer：通过 Broker 从某个 Topic 中获取消息
+
+消息可以由`<topic,partition,offset>`三元组唯一确定
 
 ## 参考
 
