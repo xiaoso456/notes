@@ -39,6 +39,12 @@ helm serach repo [keyword] --registry <repo_addr>
 helm repo remove <repo_name>
 ```
 
+#### 更新 helm 仓库
+
+```
+helm repo update
+```
+
 
 
 ### 状态
@@ -172,7 +178,15 @@ helm uninstall <release_name>
 |                  |        |              |
 |                  |        |              |
 
-#### 
+### charts
+
+#### 下载 chars 包到本地
+
+```
+helm fetch <chart_name> [--version x.x.x]
+```
+
+
 
 
 
