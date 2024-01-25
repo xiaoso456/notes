@@ -148,7 +148,13 @@ helm install my-kafka bitnami/kafka --version 26.6.3 \
 
 集群外可以通过 `192.168.229.128:31000` 访问 pod `my-kafka-controller-0`，访问其他两个pod同理
 
+
+
 如果想只暴露一个nodeport，负载均衡到三个pod，目前bitnami的helm charts应该没有提供一个比较清晰的配置方法，可能需要修改helm charts，修改advertised.listeners让所有pod指向同一个nodePort，例如`EXTERNAL://192.168.229.128:31000`
+
+
+
+
 
 
 
