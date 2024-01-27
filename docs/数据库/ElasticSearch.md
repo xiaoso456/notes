@@ -861,6 +861,41 @@ GET /my_bulk_test/_search
 
 ## 高级功能
 
+### Sniff 自动探嗅
+
+Sniff客户端是ElasticSearch客户端一个增强，用于客户端级的节点自动发现、负载均衡
+
+引入库
+
+```xml
+<dependency>
+    <groupId>org.elasticsearch.client</groupId>
+    <artifactId>elasticsearch-rest-client-sniffer</artifactId>
+    <version>8.12.0</version>
+</dependency>
+```
+
+为一个 rest客户端创建sniff
+
+```java
+RestClient restClient = RestClient.builder(
+    new HttpHost("localhost", 9200, "http"))
+    .build();
+Sniffer sniffer = Sniffer.builder(restClient).build();
+
+// 关闭连接
+sniffer.close();
+restClient.close();
+```
+
+sniffer 的实现逻辑比较简单，开启一个定时任务，请求ES rest 接口`/_nodes/http`获取集群所有可用节点ip/host信息，并把这些信息替换现有restClient存储的信息。
+
+在一般环境部署elasticsearch集群时，使用sniff没有问题，但如果在k8s环境下部署单节点ES，使用sniff时，重启ES服务端会导致ES 客户端无法再次连接到ES，原因是K8S环境中ES重启后，IP会改变，经过sniff后，ES客户端保存的pod地址替代初始启动时的service/headless地址。因此该部署形态不建议使用sniff，如果这时不便于修改客户端代码，去除sniff，也可以添加ES配置，修改ES对外暴露HOST为service地址或headless地址
+
+
+
+
+
 ### 自动补全
 
 利用分词器以及completion类型，可以让ES和搜索引擎一样，输入关键词，自动完成选项。这里不作多介绍
@@ -884,3 +919,5 @@ https://www.bilibili.com/video/BV1Gh411j7d6
 [1小时ElasticSearch求生指南_阿卓的技术博客_51CTO博客](https://blog.51cto.com/u_14743302/2482588)
 
 [[Elasticsearch\] 分散式特性 & 分散式搜尋的機制 | 小信豬的原始部落 (godleon.github.io)](https://godleon.github.io/blog/Elasticsearch/Elasticsearch-distributed-mechanism/)
+
+[Sniffer | Elasticsearch Java API Client [8.12\] | Elastic](https://www.elastic.co/guide/en/elasticsearch/client/java-api-client/current/sniffer.html)
