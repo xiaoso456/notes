@@ -14,13 +14,9 @@
   - [ ] MiniSpring、Spring
 + 持续集成、持续部署（CI/CD）
   - [x] GitHub actions
-    - [ ] 补充更多示例
-  - [ ] jenkins
-  - [ ] Gitea + drone
 + 版本控制
   - [ ] Git
 + Linux
-  - [ ] 常用命令
   - [ ] Vim
 + 容器云
   - [x] Docker

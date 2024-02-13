@@ -1,6 +1,8 @@
 ## 简介
 
-FlinkCDC 是一个基于 Apache Flink 的实时数据流处理框架，可以捕获任意数据源的变更信息，将其转换为数据流，并利用 Flink 的流式处理能力进行实时的增量数据处理和实时 ETL 等操作。FlinkCDC 支持 SQL 数据库、NoSQL、Hive 等多种数据源，实现了高效的数据捕获能力和 Exactly-Once 语义的数据处理，具备高性能、可扩展性和灵活性等优点，可以满足大规模、实时处理的需求。
+FlinkCDC 是一个基于 Apache Flink 的实时数据流处理框架，可以捕获任意数据源的变更信息，将其转换为数据流，并利用 Flink
+的流式处理能力进行实时的增量数据处理和实时 ETL 等操作。FlinkCDC 支持 SQL 数据库、NoSQL、Hive 等多种数据源，实现了高效的数据捕获能力和
+Exactly-Once 语义的数据处理，具备高性能、可扩展性和灵活性等优点，可以满足大规模、实时处理的需求。
 
 可用作数据同步，如 MySql 数据库向 ElasticSearch 同步
 
@@ -21,35 +23,35 @@ FlinkCDC 是一个基于 Apache Flink 的实时数据流处理框架，可以捕
 ```yaml
 version: '2.1'
 services:
-  mysql:
-    image: debezium/example-mysql:1.1
-    ports:
-      - "3306:3306"
-    environment:
-      - MYSQL_ROOT_PASSWORD=123456
-      - MYSQL_USER=mysqluser
-      - MYSQL_PASSWORD=mysqlpw
-  elasticsearch:
-    image: elastic/elasticsearch:7.6.0
-    environment:
-      - cluster.name=docker-cluster
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      - discovery.type=single-node
-    ports:
-      - "9200:9200"
-      - "9300:9300"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-      nofile:
-        soft: 65536
-        hard: 65536
-  kibana:
-    image: elastic/kibana:7.6.0
-    ports:
-      - "5601:5601"
+   mysql:
+      image: debezium/example-mysql:1.1
+      ports:
+         - "3306:3306"
+      environment:
+         - MYSQL_ROOT_PASSWORD=123456
+         - MYSQL_USER=mysqluser
+         - MYSQL_PASSWORD=mysqlpw
+   elasticsearch:
+      image: elastic/elasticsearch:7.6.0
+      environment:
+         - cluster.name=docker-cluster
+         - bootstrap.memory_lock=true
+         - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+         - discovery.type=single-node
+      ports:
+         - "9200:9200"
+         - "9300:9300"
+      ulimits:
+         memlock:
+            soft: -1
+            hard: -1
+         nofile:
+            soft: 65536
+            hard: 65536
+   kibana:
+      image: elastic/kibana:7.6.0
+      ports:
+         - "5601:5601"
 ```
 
 使用命令启动 `docker-compose up -d`
@@ -82,10 +84,12 @@ VALUES(1, 'xiaoso', ' 第一个用户 ');
 
    进入 `flink-1.16.0/lib` 文件夹，下载 es 和 mysql 连接器
 
-   + 下载 es 连接器`curl -O https://repo.maven.apache.org/maven2/org/apache/flink/flink-sql-connector-elasticsearch7/1.16.0/flink-sql-connector-elasticsearch7-1.16.0.jar`
-   + 下载 mysql 连接器`curl -O https://repo1.maven.org/maven2/com/ververica/flink-sql-connector-mysql-cdc/2.3.0/flink-sql-connector-mysql-cdc-2.3.0.jar`
+   + 下载 es
+     连接器 `curl -O https://repo.maven.apache.org/maven2/org/apache/flink/flink-sql-connector-elasticsearch7/1.16.0/flink-sql-connector-elasticsearch7-1.16.0.jar`
+   + 下载 mysql
+     连接器 `curl -O https://repo1.maven.org/maven2/com/ververica/flink-sql-connector-mysql-cdc/2.3.0/flink-sql-connector-mysql-cdc-2.3.0.jar`
 
-4. 修改 `conf/flink-conf.yaml`如下几行
+4. 修改 `conf/flink-conf.yaml` 如下几行
 
 ```yaml
 taskmanager.numberOfTaskSlots: 50
@@ -145,7 +149,7 @@ maven 添加依赖
             <artifactId>flink-connector-base</artifactId>
             <version>1.16.0</version>
         </dependency>
-        <!--mysql 连接器-->
+        <!--mysql 连接器 -->
         <dependency>
             <groupId>com.ververica</groupId>
             <artifactId>flink-connector-mysql-cdc</artifactId>
@@ -163,7 +167,7 @@ maven 添加依赖
             <artifactId>flink-table-api-java</artifactId>
             <version>1.16.0</version>
         </dependency>
-        <!--java 客户端-->
+        <!--java 客户端 -->
         <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-clients</artifactId>
@@ -220,8 +224,6 @@ maven 添加依赖
     </build>
 ```
 
-
-
 添加 Flink.java
 
 ```java
@@ -268,8 +270,7 @@ public class FlinkCDC {
 }
 ```
 
-
-
 ## 参考
 
-[快速上手 — Flink CDC documentation (ververica.github.io)](https://ververica.github.io/flink-cdc-connectors/release-2.1/content/快速上手/index.html)
+[快速上手 — Flink CDC documentation (ververica.github.io)](https://ververica.github.io/flink-cdc-connectors/release-2.1/content/
+快速上手 /index.html)

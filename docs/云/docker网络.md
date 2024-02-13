@@ -1,8 +1,11 @@
 ## Docker 网络简介
 
-Docker使用Linux桥接网卡，在宿主机虚拟一个docker容器网桥（docker0），docker启动一个容器时会根据docker网桥的网段分配给容器一个IP地址，称为Container-IP，同时Docker网桥是每个容器的默认网络网关。因为在同一宿主机内的容器都接入同一个网桥，这样容器之间就能够通过容器的Container-IP直接通信。
+Docker 使用 Linux 桥接网卡，在宿主机虚拟一个 docker 容器网桥（docker0），docker 启动一个容器时会根据 docker 网桥的网段分配给容器一个
+IP 地址，称为 Container-IP，同时 Docker 网桥是每个容器的默认网络网关。因为在同一宿主机内的容器都接入同一个网桥，这样容器之间就能够通过容器的
+Container-IP 直接通信。
 
-docker网桥是宿主机虚拟出来的，并不是真实存在的网络设备，外部网络是无法寻址到的，这也意味着外部网络无法通过直接Container-IP访问到容器。
+docker 网桥是宿主机虚拟出来的，并不是真实存在的网络设备，外部网络是无法寻址到的，这也意味着外部网络无法通过直接
+Container-IP 访问到容器。
 
 ## 术语
 
@@ -14,72 +17,85 @@ docker网桥是宿主机虚拟出来的，并不是真实存在的网络设备�
 
 ## Docker 网络模式
 
-| Docker网络模式  | 配置                      | 说明                                                         |
+| Docker 网络模式  | 配置                      | 说明                                                         |
 | --------------- | ------------------------- | ------------------------------------------------------------ |
-| host模式        | –net=host                 | 容器和宿主机共享`Network namespace`。  容器将不会虚拟出自己的网卡，配置自己的IP 等，而是使用宿主机的IP和端口。 |
-| container模式   | –net=container:NAME_or_ID | 容器和另外一个容器共享`Network namespace`。  kubernetes中的pod就是多个容器共享一个`Network namespace`。  创建的容器不会创建自己的网卡，配置自己的 IP， 而是和一个指定的容器共享IP、端口范围。 |
-| none模式        | –net=none                 | 容器有独立的`Network namespace`，并没有对其进行任何网络设置，如分配veth pair和网桥连接，配置IP等。  `该模式关闭了容器的网络功能。` |
-| bridge模式      | –net=bridge               | (默认模式)。此模式会为每一个容器分配、设置IP等，并将容器连接到一个`docker0虚拟网桥`，通过`docker0网桥`以及`Iptable nat`表配置与宿主机通信 |
-| Macvlan network | 无                        | 容器具备Mac地址，使其显示为网络上的物理 设备                 |
-| Overlay         | 无                        | (覆盖网络): 利用VXLAN实现的bridge模式                        |
+| host 模式        | –net=host                 | 容器和宿主机共享 `Network namespace`。  容器将不会虚拟出自己的网卡，配置自己的 IP 等，而是使用宿主机的 IP 和端口。 |
+| container 模式   | –net=container:NAME_or_ID | 容器和另外一个容器共享 `Network namespace`。  kubernetes 中的 pod 就是多个容器共享一个 `Network namespace`。  创建的容器不会创建自己的网卡，配置自己的 IP， 而是和一个指定的容器共享 IP、端口范围。 |
+| none 模式        | –net=none                 | 容器有独立的 `Network namespace`，并没有对其进行任何网络设置，如分配 veth pair 和网桥连接，配置 IP 等。  ` 该模式关闭了容器的网络功能。` |
+| bridge 模式      | –net=bridge               | (默认模式)。此模式会为每一个容器分配、设置 IP 等，并将容器连接到一个 `docker0 虚拟网桥 `，通过 `docker0 网桥 ` 以及 `Iptable nat` 表配置与宿主机通信 |
+| Macvlan network | 无                        | 容器具备 Mac 地址，使其显示为网络上的物理 设备                 |
+| Overlay         | 无                        | (覆盖网络): 利用 VXLAN 实现的 bridge 模式                        |
 
-### bridge模式
+### bridge 模式
 
-bridge是默认的网络模式，该模式容器没有公有ip，只有宿主机可以直接访问，外部主机是不可见的，但容器通过宿主机的NAT规则后可以访问外网。
+bridge 是默认的网络模式，该模式容器没有公有 ip，只有宿主机可以直接访问，外部主机是不可见的，但容器通过宿主机的 NAT
+规则后可以访问外网。
 
 #### Bridge 桥接模式的实现
 
-- Docker Daemon利用veth pair技术，在宿主机上创建两个虚拟网络接口设备，假设为veth0 和veth1。而veth pair技术的特性可以保证无论哪一个veth接收到网络报文，都会将报文传输给另一方。
-- Docker Daemon将veth0附加到Docker Daemon创建的docker0网桥上。保证宿主机的网络报文可以发往veth0;
-- Docker Daemon 将veth1添加到Docker Container所属的namespace下，并被改名为eth0。 如此一来，保证宿主机的网络报文若发往veth0则立即会被eth0接收，实现宿主机到Docker Container网络的联通性;同时也保证Docker Container单独使用eth0，实现容器网络环境的隔离性。
+- Docker Daemon 利用 veth pair 技术，在宿主机上创建两个虚拟网络接口设备，假设为 veth0 和 veth1。而 veth pair 技术的特性可以保证无论哪一个
+  veth 接收到网络报文，都会将报文传输给另一方。
+- Docker Daemon 将 veth0 附加到 Docker Daemon 创建的 docker0 网桥上。保证宿主机的网络报文可以发往 veth0;
+- Docker Daemon 将 veth1 添加到 Docker Container 所属的 namespace 下，并被改名为 eth0。 如此一来，保证宿主机的网络报文若发往
+  veth0 则立即会被 eth0 接收，实现宿主机到 Docker Container 网络的联通性; 同时也保证 Docker Container 单独使用
+  eth0，实现容器网络环境的隔离性。
 
-#### Bridge桥接模式的缺陷
+#### Bridge 桥接模式的缺陷
 
-Docker Container不具有公有IP，即和宿主机eth0不处于同一个网段。导致的结果是宿主机以外的世界不能直接和容器进行通信。
+Docker Container 不具有公有 IP，即和宿主机 eth0 不处于同一个网段。导致的结果是宿主机以外的世界不能直接和容器进行通信。
 
 #### 注意
 
-eth设备是成双成对出现的，一端是容器内部命名为eth0，一端是加入到网桥并命名的veth(通常命名为veth)，它们组成了一个数据传输通道，一端进一端出，veth设备连接了两个网络设备并实现了数据通信。
+eth 设备是成双成对出现的，一端是容器内部命名为 eth0，一端是加入到网桥并命名的 veth(通常命名为 veth)
+，它们组成了一个数据传输通道，一端进一端出，veth 设备连接了两个网络设备并实现了数据通信。
 
-### Host网络模式
+### Host 网络模式
 
-host模式相当于Vmware中的NAT模式，与宿主机在同一个网络中，但没有独立IP地址
+host 模式相当于 Vmware 中的 NAT 模式，与宿主机在同一个网络中，但没有独立 IP 地址
 
-启动容器使用host模式，容器将不会获得一个独立的Network Namespace，而是和宿主机共用一个Network Namespace。
+启动容器使用 host 模式，容器将不会获得一个独立的 Network Namespace，而是和宿主机共用一个 Network Namespace。
 
-容器将不会虚拟出自己的网卡，配置自己的IP等，而是使用宿主机的IP和端口。除此之外容器的其他方面，比如文件系统、进程列表等还是和宿主机隔离
+容器将不会虚拟出自己的网卡，配置自己的 IP 等，而是使用宿主机的 IP 和端口。除此之外容器的其他方面，比如文件系统、进程列表等还是和宿主机隔离
 
 #### 优点
 
-使用host模式的容器可以直接使用宿主机的IP地址与外界通信，容器内部的服务端口也可以使用宿主机的端口，不需要进行NAT
+使用 host 模式的容器可以直接使用宿主机的 IP 地址与外界通信，容器内部的服务端口也可以使用宿主机的端口，不需要进行 NAT
 
-host最大的优势就是网络性能比较好，docker host上已经使用的端口就不能再用了，网络的隔离性不好。
+host 最大的优势就是网络性能比较好，docker host 上已经使用的端口就不能再用了，网络的隔离性不好。
 
-host网络模式需要在容器创建时指定`–network=host`
+host 网络模式需要在容器创建时指定 `–network=host`
 
-host模式是bridge桥接模式很好的补充。采用host模式的Docker Container，可以直接使用宿主机的IP地址与外界进行通信，若宿主机的eth0是一个公有IP，那么容器也拥有这个公有IP。同时容器内服务的端口也可以使用宿主机的端口，无需额外进行NAT转换。
+host 模式是 bridge 桥接模式很好的补充。采用 host 模式的 Docker Container，可以直接使用宿主机的 IP 地址与外界进行通信，若宿主机的
+eth0 是一个公有 IP，那么容器也拥有这个公有 IP。同时容器内服务的端口也可以使用宿主机的端口，无需额外进行 NAT 转换。
 
-host模式可以让容器共享宿主机网络栈,这样的好处是外部主机与容器直接通信,但是容器的网络缺少隔离性。
-
-#### 缺陷
-
-使用Host模式的容器不再拥有隔离、独立的网络环境。虽然可以让容器内部的服务和传统情况无差别、无改造的使用，但是由于网络隔离性的弱化，该容器会与宿主机共享竞争网络栈的使用; 另外，容器内部将不再拥有所有的端口资源，原因是部分端口资源已经被宿主机本身的服务占用，还有部分端口已经用以bridge网络模式容器的端口映射。
-
-### Container网络模式
-
-一种特殊host网络模式， container网络模式是Docker中一种较为特别的网络的模式。在容器创建时使用`–network=container:vm1`指定。(vm1指定的是运行的容器名)处于这个模式下的 Docker 容器会共享一个网络环境,这样两个容器之间可以使用localhost高效快速通信。
+host 模式可以让容器共享宿主机网络栈, 这样的好处是外部主机与容器直接通信, 但是容器的网络缺少隔离性。
 
 #### 缺陷
 
-Container网络模式没有改善容器与宿主机以外世界通信的情况(和桥接模式一样，不能连接宿主机以外的其他设备)。
+使用 Host 模式的容器不再拥有隔离、独立的网络环境。虽然可以让容器内部的服务和传统情况无差别、无改造的使用，但是由于网络隔离性的弱化，该容器会与宿主机共享竞争网络栈的使用;
+另外，容器内部将不再拥有所有的端口资源，原因是部分端口资源已经被宿主机本身的服务占用，还有部分端口已经用以 bridge
+网络模式容器的端口映射。
 
-这个模式指定新创建的容器和已经存在的一个容器共享一个Network Namespace，而不是和宿主机共享。新创建的容器不会创建自己的网卡，配置自己的IP，而是和一个指定的容器共享IP、端口范围等。 同样，两个容器除了网络方面，其他的如文件系统、进程列表等还是隔离的。两个容器的进程可以通过lo网卡设备通信。
+### Container 网络模式
 
-### none模式
+一种特殊 host 网络模式， container 网络模式是 Docker 中一种较为特别的网络的模式。在容器创建时使用 `–network=container:vm1`
+指定。(vm1 指定的是运行的容器名) 处于这个模式下的 Docker 容器会共享一个网络环境, 这样两个容器之间可以使用 localhost
+高效快速通信。
 
-使用none模式，Docker容器拥有自己的Network Namespace，但是，并不为Docker容器进行任何网络配置。Docker容器没有网卡、IP、路由等信息。需要我们自己为Docker容器添加网卡、配置IP等。
+#### 缺陷
 
-这种网络模式下容器只有lo回环网络，没有其他网卡。none模式可以在容器创建时通过-- network=none来指定。这种类型的网络没有办法联网，封闭的网络能很好的保证容器的安全性。
+Container 网络模式没有改善容器与宿主机以外世界通信的情况 (和桥接模式一样，不能连接宿主机以外的其他设备)。
+
+这个模式指定新创建的容器和已经存在的一个容器共享一个 Network Namespace，而不是和宿主机共享。新创建的容器不会创建自己的网卡，配置自己的
+IP，而是和一个指定的容器共享 IP、端口范围等。 同样，两个容器除了网络方面，其他的如文件系统、进程列表等还是隔离的。两个容器的进程可以通过
+lo 网卡设备通信。
+
+### none 模式
+
+使用 none 模式，Docker 容器拥有自己的 Network Namespace，但是，并不为 Docker 容器进行任何网络配置。Docker
+容器没有网卡、IP、路由等信息。需要我们自己为 Docker 容器添加网卡、配置 IP 等。
+
+这种网络模式下容器只有 lo 回环网络，没有其他网卡。none 模式可以在容器创建时通过 -- network=none 来指定。这种类型的网络没有办法联网，封闭的网络能很好的保证容器的安全性。
 
 ## 参考
 

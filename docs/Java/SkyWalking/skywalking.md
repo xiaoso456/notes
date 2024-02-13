@@ -46,15 +46,16 @@ skywalking 主要提供功能如下：
 
 ![image-20230625210610081](./assets/image-20230625210610081.png)
 
-## K8S环境安装
+## K8S 环境安装
 
-k8s可以使用 helm 安装 skywalking：[apache/skywalking-helm at v4.5.0 (github.com)](https://github.com/apache/skywalking-helm/tree/v4.5.0)
+k8s 可以使用 helm 安装
+skywalking：[apache/skywalking-helm at v4.5.0 (github.com)](https://github.com/apache/skywalking-helm/tree/v4.5.0)
 
-skywalking 一般使用 elasticsearch作为存储后端
+skywalking 一般使用 elasticsearch 作为存储后端
 
-1. 用helm安装一个测试用 elasticsearch,账号为`elastic `,密码为`elastic`
+1. 用 helm 安装一个测试用 elasticsearch, 账号为 `elastic `, 密码为 `elastic`
 
-helm：[弹性搜索 8.5.1 ·弹性/弹性 (artifacthub.io)](https://artifacthub.io/packages/helm/elastic/elasticsearch)
+helm：[弹性搜索 8.5.1 ·弹性 / 弹性 (artifacthub.io)](https://artifacthub.io/packages/helm/elastic/elasticsearch)
 
 ```sh
 helm repo add elastic https://helm.elastic.co
@@ -85,8 +86,6 @@ helm install skywalking \
   --set oap.javaOpts="-Xmx512m -Xms512m"
 ```
 
-
-
 卸载：
 
 ```
@@ -94,8 +93,6 @@ helm uninstall skywalking -n skywalking-demo
 helm uninstall es-skywalking -n skywalking-demo
 
 ```
-
-
 
 ## 组件
 
@@ -123,7 +120,7 @@ helm uninstall es-skywalking -n skywalking-demo
 + Kong
 + ...
 
-###  Operation
+### Operation
 
 + SkyWalking CLI
 
@@ -134,8 +131,6 @@ helm uninstall es-skywalking -n skywalking-demo
   在 k8s 环境的安装脚本
 
 + SkyWalking Cloud on Kubernetes
-
-
 
 ### 数据库
 
@@ -160,12 +155,12 @@ helm uninstall es-skywalking -n skywalking-demo
 
 ### 启动配置
 
-使用agent启动后，会把跟踪获取到的信息上传到 skywalking 后端，默认情况下上传到本地 `127.0.0.1:11800`，可以通过环境变量配置
+使用 agent 启动后，会把跟踪获取到的信息上传到 skywalking 后端，默认情况下上传到本地 `127.0.0.1:11800`，可以通过环境变量配置
 
 ```
-# 配置SW后端
+# 配置 SW 后端
 SW_AGENT_COLLECTOR_BACKEND_SERVICES=192.168.229.128:31516
-# 配置上传到SW后端的应用名
+# 配置上传到 SW 后端的应用名
 SW_AGENT_NAME=midi
 ```
 
@@ -245,19 +240,23 @@ spec:
 
 #### trace 模型
 
-为了理解 skywalking 跟踪模型你需要理解下面这些概念：[Trace Data Protocol | Apache SkyWalking](https://skywalking.apache.org/docs/main/v9.5.0/en/api/trace-data-protocol-v3/)
+为了理解 skywalking
+跟踪模型你需要理解下面这些概念：[Trace Data Protocol | Apache SkyWalking](https://skywalking.apache.org/docs/main/v9.5.0/en/api/trace-data-protocol-v3/)
 
-`EntrySpan`：表示服务提供者，也是服务器端的端点。作为一个 APM 系统，SkyWalking 针对的是应用服务器。因此，几乎所有的服务和 MQ 消费者都是 EntrySpans。
+`EntrySpan`：表示服务提供者，也是服务器端的端点。作为一个 APM 系统，SkyWalking 针对的是应用服务器。因此，几乎所有的服务和 MQ
+消费者都是 EntrySpans。
 
-`LocalSpan`：表示与远程服务无关的跟踪片段（典型代表就是 Java 方法）。它既不是 MQ 生产者/消费者，也不是服务的提供者/消费者（例如 HTTP 服务）。
+`LocalSpan`：表示与远程服务无关的跟踪片段（典型代表就是 Java 方法）。它既不是 MQ 生产者 / 消费者，也不是服务的提供者 / 消费者（例如
+HTTP 服务）。
 
-`ExitSpan`：典型代表是客户端的服务或 MQ 生产者。在 SkyWalking 的早期版本被称为 LeafSpan。例如，通过 JDBC 访问数据库，以及读取 Redis/Memcached 均归类为 ExitSpans。
+`ExitSpan`：典型代表是客户端的服务或 MQ 生产者。在 SkyWalking 的早期版本被称为 LeafSpan。例如，通过 JDBC 访问数据库，以及读取
+Redis/Memcached 均归类为 ExitSpans。
 
-`跨线程/进程父 span`：称为“reference”。参考承载了 trace ID、segment ID、span ID、service name, service instance name, endpoint name 以及用于 client 的目标地址（注意：在跨线程操作中，这并不是必需的）中的此请求的信息。欲了解更多详情，请参阅 https://skywalking.apache.org/docs/main/v9.5.0/en/api/x-process-propagation-headers-v3
+` 跨线程 / 进程父 span`：称为“reference”。参考承载了 trace ID、segment ID、span ID、service name, service instance name,
+endpoint name 以及用于 client
+的目标地址（注意：在跨线程操作中，这并不是必需的）中的此请求的信息。欲了解更多详情，请参阅 https://skywalking.apache.org/docs/main/v9.5.0/en/api/x-process-propagation-headers-v3
 
 `Span＃skipAnalysis`：如果 span 不需要进行后端分析，可能为 TRUE
-
-
 
 #### trace API
 
@@ -284,8 +283,6 @@ SpanRef spanRef = Tracer.createExitSpan("${operationName}", "${remotePeer}");
 ```java
 Tracer.stopSpan();
 ```
-
-
 
 更多请参考官网：[Create Span | Apache SkyWalking](https://skywalking.apache.org/docs/skywalking-java/v8.16.0/en/setup/service-agent/java-agent/application-toolkit-tracer/)
 

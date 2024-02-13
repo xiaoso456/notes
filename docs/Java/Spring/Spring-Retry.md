@@ -1,6 +1,6 @@
 ## 简介
 
-Spring Retry是一个Spring框架提供的重试机制,用于处理容错和幂等操作
+Spring Retry 是一个 Spring 框架提供的重试机制, 用于处理容错和幂等操作
 
 主要功能和特征：
 
@@ -9,11 +9,9 @@ Spring Retry是一个Spring框架提供的重试机制,用于处理容错和幂�
 - 支持方法和声明式事务重试。
 - 支持同步和异步重试。
 
-
-
 ## 依赖
 
-一般 JDK8 使用 1.x.x ，JDK17后可以使用2.x，此外还需要引入 aspects 依赖
+一般 JDK8 使用 1.x.x ，JDK17 后可以使用 2.x，此外还需要引入 aspects 依赖
 
 ```xml
         <dependency>
@@ -31,7 +29,7 @@ Spring Retry是一个Spring框架提供的重试机制,用于处理容错和幂�
 
 ## 快速开始
 
-使用 `@EnableRetry`开启 retry 功能
+使用 `@EnableRetry` 开启 retry 功能
 
 ```java
 @SpringBootApplication
@@ -43,7 +41,7 @@ public class Main {
 }
 ```
 
-接口实现类使用 `@Retryable` 注解，调用接口时会进行最多100次错误重试
+接口实现类使用 `@Retryable` 注解，调用接口时会进行最多 100 次错误重试
 
 ```java
 @Service
@@ -84,7 +82,7 @@ class Service {
 
 + recover ：恢复策略，达到最大重试次数后执行的执行的方法
 
-  如下代码，重试1次仍然失败后，会执行 myRecover 方法，返回"系统恢复中"
+  如下代码，重试 1 次仍然失败后，会执行 myRecover 方法，返回"系统恢复中"
 
 ```java
 
@@ -135,8 +133,6 @@ public void service3() {
 }
 ```
 
-
-
 监听器 listener
 
 监听器是其中一个重要扩展点，监听器侧重于在重试的生命周期扩展，需要实现 RetryListener 接口
@@ -182,8 +178,6 @@ public interface RetryListener {
 
 ```
 
-
-
 拦截器 Interceptor 侧重于在对行为进行增强和修改，需要实现 MethodInterceptor 接口
 
 ```java
@@ -195,10 +189,8 @@ public interface MethodInterceptor extends Interceptor {
 
 ```
 
-
-
 ## 参考
 
 [GitHub - spring-projects/spring-retry](https://github.com/spring-projects/spring-retry)
 
-[Spring Retry中文文档 - CodeAntenna](https://codeantenna.com/a/rePGPJaTEL)
+[Spring Retry 中文文档 - CodeAntenna](https://codeantenna.com/a/rePGPJaTEL)

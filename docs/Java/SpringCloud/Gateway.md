@@ -2,32 +2,30 @@
 
 Spring Cloud Gateway 是微服务网关组件，可以实现路由转发、认证、鉴权、监控等功能
 
-
-
 功能：
 
 + 动态路由
 + 路径重写
-+ 集成Spring Cloud 服务发现功能（Nacos、Eruka）
++ 集成 Spring Cloud 服务发现功能（Nacos、Eruka）
 + 可集成流控降级功能（Sentinel、Hystrix）
 + 可对路由指定 Predicate（断言）和 Filter（过滤器）
 
 ## 术语
 
-
-
 ## 快速开始
 
-1. 新建 SpringBoot项目（不是Web），引入依赖
+1. 新建 SpringBoot 项目（不是 Web），引入依赖
 
 ```xml
+
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-gateway</artifactId>
 </dependency>
 ```
 
-2. 新建配置文件 `application.yml`，编写路由规则如下，作用是访问 `127.0.0.1:40000/hello-service/*` 时，会把请求转发到 `127.0.0.1:10007/*`
+2. 新建配置文件 `application.yml`，编写路由规则如下，作用是访问 `127.0.0.1:40000/hello-service/*`
+   时，会把请求转发到 `127.0.0.1:10007/*`
 
 ```yaml
 server:
@@ -85,18 +83,19 @@ TODO
 1. 引入依赖
 
 ```xml
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-gateway</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-        </dependency>
+
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-gateway</artifactId>
+</dependency>
+<dependency>
+<groupId>org.springframework.boot</groupId>
+<artifactId>spring-boot</artifactId>
+</dependency>
+<dependency>
+<groupId>com.alibaba.cloud</groupId>
+<artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+</dependency>
 ```
 
 2. 新建 `application.yml`，配置 nacos 服务地址，把 uri 修改服务名
@@ -116,7 +115,7 @@ spring:
     gateway:
       routes:
         - id: hello-service-route # 路由唯一标识，一般用服务名
-          uri: lb://hello-service # lb://<服务名>，使用nacos负载均衡策略
+          uri: lb://hello-service # lb://< 服务名 >，使用 nacos 负载均衡策略
           # 断言规则，什么的请求会被转发到这个地址
           predicates:
             - Path=/hello-service/**
@@ -149,7 +148,7 @@ spring:
           enabled: true
 ```
 
-现在访问 `127.0.0.1:40000/<服务名>/*` 会自动访问对应服务的服务
+现在访问 `127.0.0.1:40000/< 服务名 >/*` 会自动访问对应服务的服务
 
 ::: tip
 

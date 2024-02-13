@@ -1,6 +1,7 @@
 ## 简介
 
-GraalVM 是一个基于 Java 虚拟机（JVM）的高性能跨语言运行时环境，可以在一个共同的运行时中支持许多编程语言，包括 Java、Scala、Kotlin、Groovy、JavaScript 等。
+GraalVM 是一个基于 Java 虚拟机（JVM）的高性能跨语言运行时环境，可以在一个共同的运行时中支持许多编程语言，包括
+Java、Scala、Kotlin、Groovy、JavaScript 等。
 
 常用于：构建本机镜像、JVM 语言调用 Python、JavaScript 等语言
 
@@ -9,8 +10,6 @@ GraalVM 是一个基于 Java 虚拟机（JVM）的高性能跨语言运行时环
 ## 环境配置
 
 下载：推荐 Java17 [下载 GraalVM](https://www.graalvm.org/downloads/#)
-
-
 
 配置环境变量 `GRAALVM_HOME` 类似如下，最好也同时配置 JAVA_HOME
 
@@ -31,8 +30,6 @@ gu install wasm
 gu install native-image
 gu install llvm-toolchain
 ```
-
-
 
 ## Native Images
 
@@ -64,10 +61,6 @@ gu install native-image
 gu install -L ./native-image-installable-svm-java17-linux-amd64-22.3.2.jar
 ```
 
-
-
-
-
 需要安装 c 语言相关本地工具链
 
 Linux：
@@ -78,15 +71,12 @@ Linux：
 yum install gcc glibc-devel zlib-devel
 ```
 
-
-
 windows：
 
 安装 Visual Studio、Visual Studio C++（2017 15.9 版本以上），并安装 Windows SDK
 
-安装完毕后，能找类似的 `x64 Native Tools Command Prompt for VS 2022` 的程序，由于 windows 原生 cmd 奇怪的文件名限制，使用 native-images 相关命令时，最好使用这个命令行工具
-
-
+安装完毕后，能找类似的 `x64 Native Tools Command Prompt for VS 2022` 的程序，由于 windows 原生 cmd 奇怪的文件名限制，使用
+native-images 相关命令时，最好使用这个命令行工具
 
 ### 构建 native images
 
@@ -133,46 +123,47 @@ native-image [options] -jar jarfile [imagename]
 添加以下内容到 pom.xml，`${native.maven.plugin.version}` 这里使用 0.9.22 版本
 
 ```xml
-   <profiles>
-        <profile>
-            <id>native</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.graalvm.buildtools</groupId>
-                        <artifactId>native-maven-plugin</artifactId>
-                        <version>${native.maven.plugin.version}</version>
-                        <extensions>true</extensions>
-                        <executions>
-                            <execution>
-                                <id>build-native</id>
-                                <goals>
-                                    <goal>compile-no-fork</goal>
-                                </goals>
-                                <phase>package</phase>
-                            </execution>
-                            <execution>
-                                <id>test-native</id>
-                                <goals>
-                                    <goal>test</goal>
-                                </goals>
-                                <phase>test</phase>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <!-- imageName 用于设置生成的二进制文件名称 -->
-                            <imageName>${project.artifactId}</imageName>
-                            <!-- mainClass 用于指定 main 方法类路径 -->
-                            <mainClass>com.github.xiaoso456.Main</mainClass>
-                            <!--<buildArgs>-->
-                            <!--    &#45;&#45;no-fallback-->
-                            <!--</buildArgs>-->
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
+
+<profiles>
+    <profile>
+        <id>native</id>
+        <build>
+            <plugins>
+                <plugin>
+                    <groupId>org.graalvm.buildtools</groupId>
+                    <artifactId>native-maven-plugin</artifactId>
+                    <version>${native.maven.plugin.version}</version>
+                    <extensions>true</extensions>
+                    <executions>
+                        <execution>
+                            <id>build-native</id>
+                            <goals>
+                                <goal>compile-no-fork</goal>
+                            </goals>
+                            <phase>package</phase>
+                        </execution>
+                        <execution>
+                            <id>test-native</id>
+                            <goals>
+                                <goal>test</goal>
+                            </goals>
+                            <phase>test</phase>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <!-- imageName 用于设置生成的二进制文件名称 -->
+                        <imageName>${project.artifactId}</imageName>
+                        <!-- mainClass 用于指定 main 方法类路径 -->
+                        <mainClass>com.github.xiaoso456.Main</mainClass>
+                        <!--<buildArgs>-->
+                        <!--    &#45;&#45;no-fallback-->
+                        <!--</buildArgs>-->
+                    </configuration>
+                </plugin>
+            </plugins>
+        </build>
+    </profile>
+</profiles>
 ```
 
 注： configuration 里要指定入口类，不然几乎都会报 return zero 之类的错误
@@ -187,7 +178,8 @@ mvn -Pnative -DskipTests package
 
 默认情况下，graalVM 会自动分析程序的反射使用，并生成反射配置
 
-如果包含未能分析的反射，才需要手动配置,编写元数据文件，参考 [用于 GraalVM 原生映像构建的 Maven 插件 ](https://graalvm.github.io/native-build-tools/latest/maven-plugin.html#agent-support)
+如果包含未能分析的反射，才需要手动配置,
+编写元数据文件，参考 [用于 GraalVM 原生映像构建的 Maven 插件](https://graalvm.github.io/native-build-tools/latest/maven-plugin.html#agent-support)
 
 [使用跟踪代理收集元数据 (graalvm.org)](https://www.graalvm.org/latest/reference-manual/native-image/metadata/AutomaticMetadataCollection/#agent-advanced-usage)
 
@@ -217,11 +209,11 @@ mvn -Pnative -DskipTests package
 
 + GraalVM JSON 提示文件：
 
-  + 资源提示 （`resource-config.json`)
-  + 反射提示 （`reflect-config.json`)
-  + 序列化提示 （`serialization-config.json`)
-  + Java 代理提示 （`proxy-config.json`)
-  + JNI 提示 （`jni-config.json`)
+    + 资源提示 （`resource-config.json`)
+    + 反射提示 （`reflect-config.json`)
+    + 序列化提示 （`serialization-config.json`)
+    + Java 代理提示 （`proxy-config.json`)
+    + JNI 提示 （`jni-config.json`)
 
   在 `target/spring-aot/main/sources ` 或 `target/spring-aot/main/sources` 可以找到
 
@@ -230,6 +222,7 @@ mvn -Pnative -DskipTests package
 以 maven 为例，pom 需要包含以下内容
 
 ```xml
+
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -239,6 +232,7 @@ mvn -Pnative -DskipTests package
 ```
 
 ```xml
+
 <build>
     <plugins>
         <plugin>
@@ -253,73 +247,70 @@ mvn -Pnative -DskipTests package
 </build>
 ```
 
-
-
 如果不使用 parent 引入，可以参考 parent 的默认配置
 
 ```xml
-	<profile>
-      <id>native</id>
-      <build>
+
+<profile>
+    <id>native</id>
+    <build>
         <pluginManagement>
-          <plugins>
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-jar-plugin</artifactId>
-              <configuration>
-                <archive>
-                  <manifestEntries>
-                    <Spring-Boot-Native-Processed>true</Spring-Boot-Native-Processed>
-                  </manifestEntries>
-                </archive>
-              </configuration>
-            </plugin>
-            <plugin>
-              <groupId>org.springframework.boot</groupId>
-              <artifactId>spring-boot-maven-plugin</artifactId>
-              <configuration>
-                <image>
-                  <builder>paketobuildpacks/builder:tiny</builder>
-                  <env>
-                    <BP_NATIVE_IMAGE>true</BP_NATIVE_IMAGE>
-                  </env>
-                </image>
-              </configuration>
-              <executions>
-                <execution>
-                  <id>process-aot</id>
-                  <goals>
-                    <goal>process-aot</goal>
-                  </goals>
-                </execution>
-              </executions>
-            </plugin>
-            <plugin>
-              <groupId>org.graalvm.buildtools</groupId>
-              <artifactId>native-maven-plugin</artifactId>
-              <configuration>
-                <classesDirectory>${project.build.outputDirectory}</classesDirectory>
-                <metadataRepository>
-                  <enabled>true</enabled>
-                </metadataRepository>
-                <requiredVersion>22.3</requiredVersion>
-              </configuration>
-              <executions>
-                <execution>
-                  <id>add-reachability-metadata</id>
-                  <goals>
-                    <goal>add-reachability-metadata</goal>
-                  </goals>
-                </execution>
-              </executions>
-            </plugin>
-          </plugins>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <configuration>
+                        <archive>
+                            <manifestEntries>
+                                <Spring-Boot-Native-Processed>true</Spring-Boot-Native-Processed>
+                            </manifestEntries>
+                        </archive>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <configuration>
+                        <image>
+                            <builder>paketobuildpacks/builder:tiny</builder>
+                            <env>
+                                <BP_NATIVE_IMAGE>true</BP_NATIVE_IMAGE>
+                            </env>
+                        </image>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>process-aot</id>
+                            <goals>
+                                <goal>process-aot</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.graalvm.buildtools</groupId>
+                    <artifactId>native-maven-plugin</artifactId>
+                    <configuration>
+                        <classesDirectory>${project.build.outputDirectory}</classesDirectory>
+                        <metadataRepository>
+                            <enabled>true</enabled>
+                        </metadataRepository>
+                        <requiredVersion>22.3</requiredVersion>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>add-reachability-metadata</id>
+                            <goals>
+                                <goal>add-reachability-metadata</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
         </pluginManagement>
-      </build>
-    </profile>
+    </build>
+</profile>
 ```
-
-
 
 ##### 构建 docker 镜像
 
@@ -332,6 +323,7 @@ mvn -Pnative spring-boot:build-image
 ##### 直接构建可执行文件
 
 使用 maven 命令
+
 ```
 mvn -Pnative native:compile
 ```
@@ -345,13 +337,14 @@ mvn -Pnative native:compile
 如下，在 pom.xml 中引入 spring web 和 aop
 
 ```xml
+
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
-</dependency>        
+</dependency>
 <dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-aop</artifactId>
+<groupId>org.springframework.boot</groupId>
+<artifactId>spring-boot-starter-aop</artifactId>
 </dependency>
 ```
 

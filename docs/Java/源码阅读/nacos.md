@@ -1,11 +1,15 @@
 ## 简介
+
 nacos1.4.6 源码
 
 ## 源码启动
+
 下载 nacos 1.4.6 源码
+
 ```shell
 git clone -b 1.4.6 https://github.com/alibaba/nacos.git
 ```
+
 源码启动入口为 `nacos-console` 模块，入口类为 `com.alibaba.nacos.Nacos.java`
 
 源码启动前，需要先编译 `consistency` 模块，把 `.proto` 编译为 Java 类，再启动。
@@ -54,7 +58,7 @@ test：
 
 ## 隔离模型
 
-nacos采用了company，namespace，group，service四级隔离模型
+nacos 采用了 company，namespace，group，service 四级隔离模型
 
 ```mermaid
 graph TB
@@ -82,10 +86,6 @@ graph TB
         end
     end
 ```
-
-
-
-
 
 ## 配置中心
 
@@ -220,14 +220,14 @@ public void listener(HttpServletRequest request, HttpServletResponse response)
     }
 ```
 
-新建了一个clientLongPolling的任务，作用是
+新建了一个 clientLongPolling 的任务，作用是
 
-1. 新建了一个任务，把当前任务放到了队列`allSubs`里
-2. 延迟29.5s执行一个任务：尝试删除队列里当前任务
-   + 如果删除失败，说明任务已经被执行
-   + 如果删除成功，说明任务还未被执行，检查一下配置是否发生了变化，如果变化，推送变化数据，如果没变化，推送null数据
+1. 新建了一个任务，把当前任务放到了队列 `allSubs` 里
+2. 延迟 29.5s 执行一个任务：尝试删除队列里当前任务
+    + 如果删除失败，说明任务已经被执行
+    + 如果删除成功，说明任务还未被执行，检查一下配置是否发生了变化，如果变化，推送变化数据，如果没变化，推送 null 数据
 
-这个队列`allSubs`是公用队列，如果配置发生了变化，会触发一个事件，并调用相应队列的方法，返回结果
+这个队列 `allSubs` 是公用队列，如果配置发生了变化，会触发一个事件，并调用相应队列的方法，返回结果
 
 ```java
     class ClientLongPolling implements Runnable {
@@ -279,21 +279,19 @@ public void listener(HttpServletRequest request, HttpServletResponse response)
         }
 ```
 
-
-
 ## 用户权限模块
 
-nacos的auth模块被设计为轻量级auth，只适用于微服务内部使用
+nacos 的 auth 模块被设计为轻量级 auth，只适用于微服务内部使用
 
 :::info
 
-- Nacos是一个内部微服务组件，需要在可信的内部网络中运行，不可暴露在公网环境，防止带来安全风险。
-- Nacos提供简单的鉴权实现，为防止业务错用的弱鉴权体系，不是防止恶意攻击的强鉴权体系。
+- Nacos 是一个内部微服务组件，需要在可信的内部网络中运行，不可暴露在公网环境，防止带来安全风险。
+- Nacos 提供简单的鉴权实现，为防止业务错用的弱鉴权体系，不是防止恶意攻击的强鉴权体系。
 - 如果运行在不可信的网络环境或者有强鉴权诉求，请参考官方简单实现做替换增强。
 
 :::
 
-Nacos用户权限主要有两个管理模块：
+Nacos 用户权限主要有两个管理模块：
 
 + 用户管理：解决用户管理，登录，SSO 等问题
 
@@ -301,17 +299,17 @@ Nacos用户权限主要有两个管理模块：
 
 ### 结构
 
-Auth模块：主要定义权限相关的类（ActionTypes），权限模型（Permission、Resource、User），以及相关注解，比较简单
+Auth 模块：主要定义权限相关的类（ActionTypes），权限模型（Permission、Resource、User），以及相关注解，比较简单
 
-Console模块：主要提供业务层Rest接口，无非内嵌数据库或者外部数据库的增删改查
+Console 模块：主要提供业务层 Rest 接口，无非内嵌数据库或者外部数据库的增删改查
 
 ## 存储模块
 
-nacos存储模块主要提供kv存储服务，接口较为简单，实现也只提供了File和Memory两种简单实现，RocksDB没有实现
+nacos 存储模块主要提供 kv 存储服务，接口较为简单，实现也只提供了 File 和 Memory 两种简单实现，RocksDB 没有实现
 
 ### 接口设计
 
-首先看到 core模块 `com.alibaba.nacos.core.storage.kv.KvStorage` 接口，提供了围绕key的增删改查接口以及三个实现
+首先看到 core 模块 `com.alibaba.nacos.core.storage.kv.KvStorage` 接口，提供了围绕 key 的增删改查接口以及三个实现
 
 ```java
 public interface KvStorage {
@@ -349,7 +347,7 @@ public interface KvStorage {
 
 ### File 实现
 
-File实现比较简单，以其中的构造方法和get方法作说明
+File 实现比较简单，以其中的构造方法和 get 方法作说明
 
 ```java
      private final String baseDir;
@@ -385,7 +383,8 @@ File实现比较简单，以其中的构造方法和get方法作说明
     }
 ```
 
-创建Java进程级读写锁，粒度为目录级，也就是说读操作互不影响，写操作会暂停其他读写。但比较令人费解的是，put 系列方法也是使用读锁，只有doSnapshot做整个目录快照时，才使用写锁。
+创建 Java 进程级读写锁，粒度为目录级，也就是说读操作互不影响，写操作会暂停其他读写。但比较令人费解的是，put 系列方法也是使用读锁，只有
+doSnapshot 做整个目录快照时，才使用写锁。
 
 ```java
     @Override
@@ -408,7 +407,7 @@ File实现比较简单，以其中的构造方法和get方法作说明
 
 ### Memory 实现
 
-Memory实现更为简单，围绕线程安全的 ConcurrentSkipListMap （并发读写的有序map）进行增删改查
+Memory 实现更为简单，围绕线程安全的 ConcurrentSkipListMap （并发读写的有序 map）进行增删改查
 
 ```java
     private final Map<Key, byte[]> storage = new ConcurrentSkipListMap<>();
@@ -435,7 +434,7 @@ StorageFactory.java 使用了工厂模式
 
 ## 服务注册发现
 
-服务注册发现功能是 Nacos 核心，主要位于 Naming 模块和apis模块
+服务注册发现功能是 Nacos 核心，主要位于 Naming 模块和 apis 模块
 
 ### 模型
 
@@ -447,11 +446,10 @@ service-->cluster
 cluster-->instance
 ```
 
-
-
 一个能提供服务的实例所属模型如上图
 
-nacos 的 group没有实体，其实group是service的一部分，以service前缀来区分group，例如servicename为`DEFAULT_GROUP@@nacos.test.3`，group为`DEFAULT_GROUP`，service为`nacos.test.3`
+nacos 的 group 没有实体，其实 group 是 service 的一部分，以 service 前缀来区分 group，例如 servicename
+为 `DEFAULT_GROUP@@nacos.test.3`，group 为 `DEFAULT_GROUP`，service 为 `nacos.test.3`
 
 ### 代码模型
 
@@ -461,30 +459,28 @@ com.alibaba.nacos.api.naming.pojo.Instance
 @JsonInclude(Include.NON_NULL)
 public class Instance implements Serializable {
     private static final long serialVersionUID = -742906310567291979L;
-    //实例的唯一id
+    // 实例的唯一 id
     private String instanceId;
-    //实例IP
+    // 实例 IP
     private String ip;
-    //实例端口
+    // 实例端口
     private int port;
-    //实例权重
+    // 实例权重
     private double weight = 1.0D; 
-    //实例健康状态
+    // 实例健康状态
     private boolean healthy = true;
-    //实例是否可接收请求
+    // 实例是否可接收请求
     private boolean enabled = true;
-    //实例是否为临时实例
+    // 实例是否为临时实例
     private boolean ephemeral = true;
-    //实例所属集群信息
+    // 实例所属集群信息
     private String clusterName;
-    //实例所属服务信息
+    // 实例所属服务信息
     private String serviceName;
-    //用户扩展属性
+    // 用户扩展属性
     private Map<String, String> metadata = new HashMap<String, String>();
 }
 ```
-
-
 
 com.alibaba.nacos.api.naming.pojo.Cluster
 
@@ -493,31 +489,29 @@ com.alibaba.nacos.api.naming.pojo.Cluster
 
 public class Cluster implements Serializable {
 
-    //所属服务名称
+    // 所属服务名称
     private String serviceName;
 
-    //集群名称
+    // 集群名称
     private String name;
 
-    //集群健康检查配置
+    // 集群健康检查配置
     private AbstractHealthChecker healthChecker = new Tcp(); 
 
-    //集群实例默认注册端口
+    // 集群实例默认注册端口
     private int defaultPort = 80;
 
-    //集群实例默认健康检查端口
+    // 集群实例默认健康检查端口
     private int defaultCheckPort = 80;
 
-    //是否使用实例端口做健康检查
+    // 是否使用实例端口做健康检查
     private boolean useIPPort4Check = true;
 
-    //元数据
+    // 元数据
     private Map<String, String> metadata = new HashMap<String, String>();
 
 }
 ```
-
-
 
 com.alibaba.nacos.api.naming.pojo.Service
 
@@ -538,8 +532,6 @@ public class Service implements Serializable {
 }
 ```
 
-
-
 存储 namespace，group，service 映射
 
 ```java
@@ -550,7 +542,7 @@ public class Service implements Serializable {
 
 ```
 
-注意这个map虽然是多线程安全的map，但并不能保证相关操作的原子性，创建服务时，如果不存在namespace需要加锁。
+注意这个 map 虽然是多线程安全的 map，但并不能保证相关操作的原子性，创建服务时，如果不存在 namespace 需要加锁。
 
 :::info
 
@@ -578,30 +570,25 @@ putServiceLock 可以不需要用 volatile 修饰，因为不需要读取变量�
     }
 ```
 
-
-
-
-
-### Rest接口
+### Rest 接口
 
 [Open API 指南 (nacos.io)](https://nacos.io/zh-cn/docs/open-api.html)
 
 ## 分布式
 
-### 一致性协议 
+### 一致性协议
 
-Nacos提供CP和AP两类实现，CP使用现有库的Raft协议实现，AP使用自研弱一致性Distro协议
+Nacos 提供 CP 和 AP 两类实现，CP 使用现有库的 Raft 协议实现，AP 使用自研弱一致性 Distro 协议
 
 ### todo：distro
 
-
-
 ## 参考
 
-[Nacos 1.4.1源码启动流程_nacos 1.4.1 源码启动_苏州-DaniR的博客-CSDN博客](https://blog.csdn.net/chongbaozhong/article/details/116658595)
+[Nacos 1.4.1 源码启动流程 _nacos 1.4.1 源码启动 _ 苏州 -DaniR 的博客 -CSDN 博客](https://blog.csdn.net/chongbaozhong/article/details/116658595)
 
 [Nacos 快速开始](https://nacos.io/zh-cn/docs/quick-start.html)
 
 https://developer.aliyun.com/ebook/36
 
-[Nacos集群（二）阿里自研弱一致性Distro协议核心实现_@candistro_我神级欧文的博客-CSDN博客](https://blog.csdn.net/weixin_37689658/article/details/122626747)
+[Nacos 集群（二）阿里自研弱一致性 Distro 协议核心实现
+_@candistro_ 我神级欧文的博客 -CSDN 博客](https://blog.csdn.net/weixin_37689658/article/details/122626747)

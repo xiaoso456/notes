@@ -16,10 +16,11 @@ Apache Dubbo 是一款易用的、提供高性能通信和服务治理能力的�
 2. 引入依赖
 
 ```xml
-        <dependency>
-   <groupId>com.alibaba.nacos</groupId>
-   <artifactId>nacos-client</artifactId>
-   <version>2.1.2</version>
+
+<dependency>
+    <groupId>com.alibaba.nacos</groupId>
+    <artifactId>nacos-client</artifactId>
+    <version>2.1.2</version>
 </dependency>
 <dependency>
 <groupId>org.apache.dubbo</groupId>
@@ -140,8 +141,8 @@ public class AlwaysApplication {
 
 7. 依次启动
 
-   + 服务提供者 provider/Application.java
-   + 服务消费者 client/AlwaysApplication.java
+    + 服务提供者 provider/Application.java
+    + 服务消费者 client/AlwaysApplication.java
 
 8. 观察输出结果
 
@@ -152,7 +153,7 @@ public class AlwaysApplication {
 
 ## 使用
 
-###  Dubbo + SpringBoot
+### Dubbo + SpringBoot
 
 建议直接 clone 项目 [dubbo-samples-nacos](https://github.com/xiaoso456/dubbo-samples-nacos/tree/master)
 
@@ -170,7 +171,7 @@ public interface DemoService {
 }
 ```
 
-2. 新建 SpringBoot 模块 dubbo-samples-spring-boot-provider，**引用并实现 1 中模块接口**，自动向注册中心注册
+2. 新建 SpringBoot 模块 dubbo-samples-spring-boot-provider，** 引用并实现 1 中模块接口 **，自动向注册中心注册
 
 ```java
 // 实现并注册 dubbo 服务
@@ -268,7 +269,7 @@ public class DemoServiceImpl implements DemoService {
 
     @Override
     @RequestMapping(value = "/hello",method = RequestMethod.GET)
-    public String sayHello(@RequestParam("name") String name) {
+    public String sayHello(@RequestParam("name")String name) {
         return "Hello " + name;
     }
 }
@@ -464,9 +465,8 @@ public class Consumer {
 Received reply:message: "hello :Demo Request App Client"
 ```
 
-
-
-使用了 protobuf 序列化的 triple 协议兼容 grpc，可以使用 postman 进行测试，但值得注意的是，导入 proto 文件时，需要修改 proto 定义的 package 为 java 包名
+使用了 protobuf 序列化的 triple 协议兼容 grpc，可以使用 postman 进行测试，但值得注意的是，导入 proto 文件时，需要修改 proto
+定义的 package 为 java 包名
 
 ```protobuf
 syntax = "proto3";
@@ -490,15 +490,11 @@ service Greeter{
 }
 ```
 
-
-
 ![image-20230624234101442](./assets/image-20230624234101442.png)
 
 ### 端口协议复用
 
 dubbo 服务端可以在同一个端口解析多种协议
-
-
 
 pom.xml 引入依赖
 
@@ -660,14 +656,12 @@ Admin 是服务治理控制面中的一个核心组件，负责微服务集群�
 总体上来说，Admin 部署架构分为以下几个部分：
 
 - Admin 主进程，包括服务发现元数据管理、可视化控制台、安全认证策略管控、其他定制化服务治理能力等组件。
-- 强依赖组件，包括 Mysql 数据库、注册/配置/元数据中心（可以是 Kubernetes、Nacos、Zookeeper 等）
+- 强依赖组件，包括 Mysql 数据库、注册 / 配置 / 元数据中心（可以是 Kubernetes、Nacos、Zookeeper 等）
 - 可选依赖组件，包括 Prometheus、Grafana、Zipkin 等
-
-
 
 ### 源码启动
 
-dubbo admin目前不提供二进制包，可以通过源码/docker镜像/k8s helm 安装，这里使用源码启动
+dubbo admin 目前不提供二进制包，可以通过源码 /docker 镜像 /k8s helm 安装，这里使用源码启动
 
 ```sh
 git clone https://github.com/apache/dubbo-admin.git
@@ -681,16 +675,12 @@ mvn package -Dmaven.test.skip=true -f pom.xml
 
 启动 dubbo-admin-sever 模块主程序
 
-
-
 ## dubbo 模型
-
-
 
 ## 参考
 
 [Dubbo 文档 | Apache Dubbo](https://cn.dubbo.apache.org/zh-cn/overview/home/#)
 
-[Dubbo3.0入门教程 - 掘金 (juejin.cn)](https://juejin.cn/post/7258847745527791676)
+[Dubbo3.0 入门教程 - 掘金 (juejin.cn)](https://juejin.cn/post/7258847745527791676)
 
-[精选｜Dubbo异步化实践 - 掘金 (juejin.cn)](https://juejin.cn/post/7242476048005218359?searchId=20231004202749276F001D7D462446D2EE)
+[精选｜Dubbo 异步化实践 - 掘金 (juejin.cn)](https://juejin.cn/post/7242476048005218359?searchId=20231004202749276F001D7D462446D2EE)

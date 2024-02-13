@@ -1,18 +1,16 @@
 ## 简介
 
-GIN是用Go语言编写的轻量级Web框架，快速高效。具备强大的路由和中间件支持，可处理各种HTTP请求和动态路由。
+GIN 是用 Go 语言编写的轻量级 Web 框架，快速高效。具备强大的路由和中间件支持，可处理各种 HTTP 请求和动态路由。
 
 支持多种渲染格式和模板引擎，方便生成动态内容。提供错误处理和日志记录功能，可捕获错误并记录详细信息。
 
-有丰富的中间件和插件生态系统，可轻松集成各种功能。GIN简单易用，适合构建高性能的后端服务。
+有丰富的中间件和插件生态系统，可轻松集成各种功能。GIN 简单易用，适合构建高性能的后端服务。
 
 ## 安装
 
 ```sh
 go get -u github.com/gin-gonic/gin
 ```
-
-
 
 ## 快速开始
 
@@ -43,7 +41,7 @@ func main() {
 
 ### 响应视图和类型（JSON/XML）
 
-响应可以直接返回结构体/Map/原始值
+响应可以直接返回结构体 /Map/ 原始值
 
 ```go
 package main
@@ -118,7 +116,7 @@ func main() {
     <title>Title</title>
 </head>
 <body>
-username :{{.username }}
+username :{{.username}}
 </body>
 </html>
 ```
@@ -156,7 +154,7 @@ func main() {
 ### 响应静态文件
 
 1. 新建 static 文件夹，放入一张图片 1.png
-2.  新建 4.static.go
+2. 新建 4.static.go
 
 ```go
 package main
@@ -170,10 +168,10 @@ func main() {
 	// 获取路由
 	router := gin.Default()
 
-	// 访问 /1 会返回 static文件夹1.png文件
+	// 访问 /1 会返回 static 文件夹 1.png 文件
 	router.StaticFile("/1", "static/1.png")
 
-	// 访问 /static/*，会访问static/static/* 文件
+	// 访问 /static/*，会访问 static/static/* 文件
 	router.StaticFS("/static", http.Dir("./static"))
 
 	// 启动并忽略异常
@@ -214,7 +212,7 @@ func main() {
 
 ## 请求
 
-还支持原始参数，Json等等
+还支持原始参数，Json 等等
 
 ### 查询
 
@@ -251,7 +249,7 @@ import "github.com/gin-gonic/gin"
 
 func main() {
 	router := gin.Default()
-	// 路径参数(动态参数)
+	// 路径参数 (动态参数)
 	router.GET("/user/:user_id", _param)
 	_ = router.Run(":12000")
 }
@@ -283,8 +281,6 @@ func _postform(context *gin.Context) {
 	context.String(200, value)
 }
 ```
-
-
 
 ## 参考
 

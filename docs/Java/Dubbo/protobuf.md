@@ -32,17 +32,18 @@ message PageInfo{
 4. 新建一个 maven 工程，引入如下依赖，添加示例代码如下
 
 ```xml
+
 <dependency>
     <groupId>com.google.protobuf</groupId>
     <artifactId>protobuf-java</artifactId>
     <version>3.22.0</version>
-</dependency> 
+</dependency>
 
-<!--只是为了写出文件方便，非必要-->
+        <!-- 只是为了写出文件方便，非必要 -->
 <dependency>
-    <groupId>cn.hutool</groupId>
-    <artifactId>hutool-all</artifactId>
-    <version>5.8.15</version>
+<groupId>cn.hutool</groupId>
+<artifactId>hutool-all</artifactId>
+<version>5.8.15</version>
 </dependency>
 ```
 
@@ -93,8 +94,6 @@ page {
 }
 ```
 
-
-
 ## 语法
 
 ### 定义包
@@ -120,25 +119,25 @@ message SearchRequest {
 
 #### 字段类型
 
-消息每个字段需要标记类型，类型和各个语言类型映射如下（`C#`和`PHP`请参考官网）
+消息每个字段需要标记类型，类型和各个语言类型映射如下（`C#` 和 `PHP` 请参考官网）
 
-| .proto Type | Notes                                                        | C++ Type | Java/Kotlin Type[1] | Python Type[3]                  | Go Type | Ruby Type                      |
-| ----------- | ------------------------------------------------------------ | -------- | ------------------- | ------------------------------- | ------- | ------------------------------ |
-| double      |                                                              | double   | double              | float                           | float64 | Float                          |
-| float       |                                                              | float    | float               | float                           | float32 | Float                          |
-| int32       | 使用可变长度编码。编码负数效率低下-如果您的字段可能具有负值，请改用 sint32 | int32    | int                 | int                             | int32   | Fixnum or Bignum (as required) |
-| int64       | 使用可变长度编码。编码负数效率低下-如果您的字段可能具有负值，请改用 sint64 | int64    | long                | int/long[4]                     | int64   | Bignum                         |
-| uint32      | 使用可变长度编码                                             | uint32   | int[2]              | int/long[4]                     | uint32  | Fixnum or Bignum (as required) |
-| uint64      | 使用可变长度编码                                             | uint64   | long[2]             | int/long[4]                     | uint64  | Bignum                         |
-| sint32      | 使用可变长度编码。带符号的整数值。与常规 int32 相比，它们对负数的编码效率更高。 | int32    | int                 | int                             | int32   | Fixnum or Bignum (as required) |
-| sint64      | 使用可变长度编码。带符号的整数值。与常规 int64 相比，它们对负数的编码效率更高。 | int64    | long                | int/long[4]                     | int64   | Bignum                         |
-| fixed32     | 总是四个字节。如果值经常大于 2^28，则效率比 uint32 更高。       | uint32   | int[2]              | int/long[4]                     | uint32  | Fixnum or Bignum (as required) |
-| fixed64     | 总是八个字节。如果值经常大于 2^56，则效率比 uint64 更高。       | uint64   | long[2]             | int/long[4]                     | uint64  | Bignum                         |
-| sfixed32    | 总为 4 字节                                                    | int32    | int                 | int                             | int32   | Fixnum or Bignum (as required) |
-| sfixed64    | 总为 8 字节                                                    | int64    | long                | int/long[4]                     | int64   | Bignum                         |
-| bool        |                                                              | bool     | boolean             | bool                            | bool    | TrueClass/FalseClass           |
+| .proto Type | Notes                                           | C++ Type | Java/Kotlin Type[1] | Python Type[3]                  | Go Type | Ruby Type                      |
+|-------------|-------------------------------------------------|----------|---------------------|---------------------------------|---------|--------------------------------|
+| double      |                                                 | double   | double              | float                           | float64 | Float                          |
+| float       |                                                 | float    | float               | float                           | float32 | Float                          |
+| int32       | 使用可变长度编码。编码负数效率低下 - 如果您的字段可能具有负值，请改用 sint32     | int32    | int                 | int                             | int32   | Fixnum or Bignum (as required) |
+| int64       | 使用可变长度编码。编码负数效率低下 - 如果您的字段可能具有负值，请改用 sint64     | int64    | long                | int/long[4]                     | int64   | Bignum                         |
+| uint32      | 使用可变长度编码                                        | uint32   | int[2]              | int/long[4]                     | uint32  | Fixnum or Bignum (as required) |
+| uint64      | 使用可变长度编码                                        | uint64   | long[2]             | int/long[4]                     | uint64  | Bignum                         |
+| sint32      | 使用可变长度编码。带符号的整数值。与常规 int32 相比，它们对负数的编码效率更高。     | int32    | int                 | int                             | int32   | Fixnum or Bignum (as required) |
+| sint64      | 使用可变长度编码。带符号的整数值。与常规 int64 相比，它们对负数的编码效率更高。     | int64    | long                | int/long[4]                     | int64   | Bignum                         |
+| fixed32     | 总是四个字节。如果值经常大于 2^28，则效率比 uint32 更高。             | uint32   | int[2]              | int/long[4]                     | uint32  | Fixnum or Bignum (as required) |
+| fixed64     | 总是八个字节。如果值经常大于 2^56，则效率比 uint64 更高。             | uint64   | long[2]             | int/long[4]                     | uint64  | Bignum                         |
+| sfixed32    | 总为 4 字节                                         | int32    | int                 | int                             | int32   | Fixnum or Bignum (as required) |
+| sfixed64    | 总为 8 字节                                         | int64    | long                | int/long[4]                     | int64   | Bignum                         |
+| bool        |                                                 | bool     | boolean             | bool                            | bool    | TrueClass/FalseClass           |
 | string      | 字符串必须始终包含 UTF-8 编码或 7 位 ASCII 文本，并且长度不能超过 2^32。 | string   | String              | str/unicode[5]                  | string  | String (UTF-8)                 |
-| bytes       | 可以包含不超过 2^32 的任意字节序列                             | string   | ByteString          | str (Python 2) bytes (Python 3) | []byte  | String (ASCII-8BIT)            |
+| bytes       | 可以包含不超过 2^32 的任意字节序列                            | string   | ByteString          | str (Python 2) bytes (Python 3) | []byte  | String (ASCII-8BIT)            |
 
 #### 字段编号
 
@@ -163,7 +162,8 @@ message SearchRequest {
 消息字段有四种类型：
 
 + singular：默认类型，表示有 0 个或 1 个元素，如果设置了值，会把值序列化，如果设置了默认值，不会序列化默认值。
-+ optional：可选的，表示有 0 个或 1 个元素。如果设置了值，会把值序列化，如果设置了默认值，不会序列化默认值。（没懂和 singular 有啥区别）
++ optional：可选的，表示有 0 个或 1 个元素。如果设置了值，会把值序列化，如果设置了默认值，不会序列化默认值。（没懂和 singular
+  有啥区别）
 + repeated：表示有 0 个或多个有序元素，类似 list
 + map：类似 map，详情参考 [Map](https://protobuf.dev/programming-guides/encoding/#maps)
 
@@ -182,16 +182,14 @@ message Foo {
 
 如果显示指定的值为默认值，则不会被序列化。也就是说，对于标量字段，无法知道他们是被显式指定了默认值还是没有设置值
 
-| 类型        | 默认值              |      |
-| ----------- | ------------------- | ---- |
-| String      | 空字符串            |      |
-| byte        | 空 byte              |      |
-| bool        | false               |      |
-| int32 等数值 | 0                   |      |
-| enum        | 第一个枚举值，且为 0 |      |
-| message     | 取决于语言          |      |
-
-
+| 类型        | 默认值         |     |
+|-----------|-------------|-----|
+| String    | 空字符串        |     |
+| byte      | 空 byte      |     |
+| bool      | false       |     |
+| int32 等数值 | 0           |     |
+| enum      | 第一个枚举值，且为 0 |     |
+| message   | 取决于语言       |     |
 
 也可以自己定义字段的默认值，以下是简单的示例
 
@@ -201,8 +199,6 @@ message Person {
   int32 age = 2 [default = 18];
 }
 ```
-
-
 
 ### 定义枚举
 
@@ -230,9 +226,8 @@ message SearchRequest {
 }
 ```
 
-
-
 可以给枚举定义相同的值，起到别名的作用。使用别名需要添加 `option allow_alias = true`，否则 protobuf 会弹出警告
+
 ```java
 enum EnumAllowingAlias {
   option allow_alias = true;
@@ -301,15 +296,13 @@ message SomeOtherMessage {
 option java_package = "com.example.foo";
 // 生成的外部 Java 类名
 option java_outer_classname = "Ponycopter";
-// 如果为 true,一个 message 一个文件
+// 如果为 true, 一个 message 一个文件
 option java_multiple_files = true;
 ```
 
-
-
 ## 更新 message 原则
 
-[更新 message 原则 ](https://protobuf.dev/programming-guides/proto3/)
+[更新 message 原则](https://protobuf.dev/programming-guides/proto3/)
 
 ## 参考
 

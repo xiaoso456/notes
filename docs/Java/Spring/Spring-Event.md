@@ -8,9 +8,9 @@ Spring Framework 4.2 前：事件类应继承 ApplicationEvent
 
 Spring Framework 4.2 后：任意对象都可作为事件发布，但会缺少一些特性
 
-事件发布应通过 ApplicationEventPublisher对象发布
+事件发布应通过 ApplicationEventPublisher 对象发布
 
-事件监听应实现  ApplicationListener 接口
+事件监听应实现 ApplicationListener 接口
 
 ## 快速开始
 
@@ -65,7 +65,7 @@ class SpringEventDemoApplicationTests {
 5. 观察结果
 
 ```java
-Thread[main,5,main]-收到自定义事件：hello
+Thread[main,5,main]- 收到自定义事件：hello
 ```
 
 ## 使用
@@ -88,13 +88,11 @@ public class CustomSpringEventListener  {
 也可以监听多个事件
 
 ```java
-@EventListener(classes = { ContextStartedEvent.class, ContextStoppedEvent.class })
+@EventListener(classes = { ContextStartedEvent.class, ContextStoppedEvent.class})
 public void handleMultipleEvents() {
     System.out.println("Multi-event listener invoked");
 }
 ```
-
-
 
 ### 异步事件
 
@@ -117,12 +115,12 @@ public class AsynchronousSpringEventsConfig {
 }
 ```
 
-这个SimpleApplicationEventMulticaster事件发布器采用线程池的方式调用监听器，因此执行过程是异步的。
+这个 SimpleApplicationEventMulticaster 事件发布器采用线程池的方式调用监听器，因此执行过程是异步的。
 
 执行结果如下：
 
 ```
-Thread[SimpleAsyncTaskExecutor-17,5,main]-收到自定义事件：hello
+Thread[SimpleAsyncTaskExecutor-17,5,main]- 收到自定义事件：hello
 ```
 
 #### 基于方法的异步事件
@@ -146,12 +144,12 @@ public class CustomSpringEventListener  {
 观察输出
 
 ```java
-Thread[task-1,5,main]-收到自定义事件：hello
+Thread[task-1,5,main]- 收到自定义事件：hello
 ```
 
 ### 监听 Spring 中的事件
 
-Spring本身也会有很多事件，如ContextRefreshedEvent、ContextStartedEvent、RequestHandledEvent等，不作更多介绍
+Spring 本身也会有很多事件，如 ContextRefreshedEvent、ContextStartedEvent、RequestHandledEvent 等，不作更多介绍
 
 ### 泛型事件
 
@@ -212,8 +210,8 @@ public void handleCustom(CustomSpringEvent event) {
 
 - *AFTER_COMMIT*（默认值）用于在事务成功完成时触发事件
 - *AFTER_ROLLBACK* – 如果事务已回滚
-- *AFTER_COMPLETION* – 事务是否已完成（*AFTER_COMMIT*和*AFTER_ROLLBACK*的别名)
-- *BEFORE_COMMIT*用于在事务提交之前触发事件
+- *AFTER_COMPLETION* – 事务是否已完成（*AFTER_COMMIT* 和 *AFTER_ROLLBACK* 的别名 )
+- *BEFORE_COMMIT* 用于在事务提交之前触发事件
 
 ## 参考
 

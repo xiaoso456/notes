@@ -30,28 +30,26 @@
 
 + Hash
 
-  根据源地址Hash后选取服务
+  根据源地址 Hash 后选取服务
 
 + 权重
 
-
-
-## Ribbon使用
+## Ribbon 使用
 
 主要有以下几种：
 
-+ 原生API
++ 原生 API
 + Ribbon + RestTemplate
 + Ribbon + Feign
 
 ## 参考
 
-[【云原生】SpringCloud系列之客户端负载均衡Ribbon - 掘金 (juejin.cn)](https://juejin.cn/post/7126715811016179726)
+[【云原生】SpringCloud 系列之客户端负载均衡 Ribbon - 掘金 (juejin.cn)](https://juejin.cn/post/7126715811016179726)
 
 https://www.bilibili.com/video/BV1EM4y1X7tB
 
 ## TODO
 
-- [ ] 补充Ribbon 使用
+- [ ] 补充 Ribbon 使用
 - [ ] 补充自定义负载均衡策略
 

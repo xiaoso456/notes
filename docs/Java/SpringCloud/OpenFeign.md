@@ -1,16 +1,17 @@
 ## 简介
 
-OpenFeign 是开放声明式、模板化的HTTP客户端。Spring Cloud openfeign支持SpringMVC注解，整合了Ribbon和Nacos
+OpenFeign 是开放声明式、模板化的 HTTP 客户端。Spring Cloud openfeign 支持 SpringMVC 注解，整合了 Ribbon 和 Nacos
 
-使用 openfeign可以让使用HTTP请求远程调用服务时像调用本地方法一样，无需关注序列化和反序列化等操作。
+使用 openfeign 可以让使用 HTTP 请求远程调用服务时像调用本地方法一样，无需关注序列化和反序列化等操作。
 
 ## 术语
 
 ## 快速开始
 
-1. 新建一个SpringBoot Web项目，配置服务注册发现中心并启动，用于提供远程服务，在注册中心中的服务名为`hello-service`，可参考[Nacos](/SpringCloud/Nacos.md#服务注册发现 Demo)
+1. 新建一个 SpringBoot Web 项目，配置服务注册发现中心并启动，用于提供远程服务，在注册中心中的服务名为 `hello-service`
+   ，可参考 [Nacos](/SpringCloud/Nacos.md# 服务注册发现 Demo)
 
-2. 新建一个SpringBoot Web项目，配置SpringCloud 注册发现中心
+2. 新建一个 SpringBoot Web 项目，配置 SpringCloud 注册发现中心
 3. 在启动类下加入 `@EnableFeignClients` 注解
 
 ```java
@@ -23,7 +24,7 @@ public class AppFeign {
 }
 ```
 
-4. 新建 `HelloFeignService.java` 代码如下，其中`hello-service`是远程服务名，接口地址和类型需要对应
+4. 新建 `HelloFeignService.java` 代码如下，其中 `hello-service` 是远程服务名，接口地址和类型需要对应
 
 ```java
 @FeignClient(name = "hello-service",path = "/hello")
@@ -51,22 +52,20 @@ public class HelloFeignController {
 
 ```
 
-
-
 ## 配置
 
 日志级别有四种：
 
 + NONE：不记录
 + BASIC：记录请求方法、URL、状态码、执行时间
-+ HEADERS：BASIC基础上，记录请求和响应的Header
-+ FULL：HEADERS基础上，记录body、元数据
++ HEADERS：BASIC 基础上，记录请求和响应的 Header
++ FULL：HEADERS 基础上，记录 body、元数据
 
 ### 日志配置
 
 #### 配置指定接口日志级别
 
-新建 `FeignConfig.java` 类 
+新建 `FeignConfig.java` 类
 
 ```java
 public class FeignConfig {
@@ -80,11 +79,11 @@ public class FeignConfig {
 
 ::: warn
 
-不要使用`@Configuration` 让Spring管理该类，否则会变成全局配置
+不要使用 `@Configuration` 让 Spring 管理该类，否则会变成全局配置
 
 :::
 
-在feign服务上指定使用该配置类 `FeignConfig.class`
+在 feign 服务上指定使用该配置类 `FeignConfig.class`
 
 ```java
 @FeignClient(name = "hello-service",path = "/hello",configuration = FeignConfig.class)
@@ -95,8 +94,6 @@ public interface HelloFeignService {
 
 }
 ```
-
-
 
 #### 全局配置日志级别
 
@@ -124,7 +121,7 @@ feign:
 
 ### 原生注解
 
-openFeign 支持使用 feign 原生的注解，而不是SpringMVC的注解，需要进行配置
+openFeign 支持使用 feign 原生的注解，而不是 SpringMVC 的注解，需要进行配置
 
 ```yaml
 feign:
@@ -166,7 +163,7 @@ public class FeignConfig {
 
 ```
 
-在feign服务上指定使用该配置类 `FeignConfig.class`
+在 feign 服务上指定使用该配置类 `FeignConfig.class`
 
 ```java
 @FeignClient(name = "hello-service",path = "/hello",configuration = FeignConfig.class)

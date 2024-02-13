@@ -1,6 +1,6 @@
 ## 简介
 
-YAML是一种人类容易读写的数据序列化格式，常用于配置文件、数据传输协议场景。
+YAML 是一种人类容易读写的数据序列化格式，常用于配置文件、数据传输协议场景。
 
 ## 基本
 
@@ -35,9 +35,9 @@ key: value
 
 布尔值：无引号的 `true` 和 `false`
 
-空对象：无引号`null`
+空对象：无引号 `null`
 
-####  字符串
+#### 字符串
 
 字符串分单行和多行表示
 
@@ -45,10 +45,6 @@ key: value
 
 + `"` （双引号）需要用 `\` 转义
 + 单引号 `'` 不需要转义
-
-
-
-
 
 ### 对象
 
@@ -91,9 +87,9 @@ pets: [dog,cat,pig]
 
 ### 控制字符串末尾换行符
 
-多行字符串以 `|` 开头表示，`|`可以添加各种后缀控制输出的字符串
+多行字符串以 `|` 开头表示，`|` 可以添加各种后缀控制输出的字符串
 
-- `|`字符串末尾有换行符，如果有多个空行就会合并成一个
+- `|` 字符串末尾有换行符，如果有多个空行就会合并成一个
 
 ```yaml
 message: |
@@ -113,7 +109,7 @@ message2:
 }
 ```
 
-- `|-`忽略字符串末尾的换行
+- `|-` 忽略字符串末尾的换行
 
 ```yaml
 message: |
@@ -131,7 +127,7 @@ message2:
 }
 ```
 
-- `|+`保留所有的空白
+- `|+` 保留所有的空白
 
 ```yaml
 message: |
@@ -151,7 +147,7 @@ message2:
 
 ### 折叠多行字符串
 
-使用 `>` 号可以拼接多行字符串，并用空格连接，`>`可以组合`+`和`-`对末尾空行进行控制
+使用 `>` 号可以拼接多行字符串，并用空格连接，`>` 可以组合 `+` 和 `-` 对末尾空行进行控制
 
 ```yaml
 message: >
@@ -168,7 +164,7 @@ message: >
 
 ## 锚点
 
-锚点和变量类似，用 `&`声明变量，用`*`引用变量
+锚点和变量类似，用 `&` 声明变量，用 `*` 引用变量
 
 ```yaml
 name: &var1 "xiaoso"
@@ -189,14 +185,10 @@ messageList:
 }
 ```
 
-
-
-
-
 ## 参考
 
-[YAML教程（快速入门版） (biancheng.net)](http://c.biancheng.net/spring_boot/yaml.html)
+[YAML 教程（快速入门版） (biancheng.net)](http://c.biancheng.net/spring_boot/yaml.html)
 
-[yaml格式化 - Yoshieraの部屋 (gitee.io)](https://yoshiera.gitee.io/posts/miscellaneous/yaml/)
+[yaml 格式化 - Yoshiera の部屋 (gitee.io)](https://yoshiera.gitee.io/posts/miscellaneous/yaml/)
 
-[在线YAML解析转换工具 在线小工具网站 (p2hp.com)](http://tool.p2hp.com/tool-format-yaml/)
+[在线 YAML 解析转换工具 在线小工具网站 (p2hp.com)](http://tool.p2hp.com/tool-format-yaml/)

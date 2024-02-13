@@ -57,8 +57,6 @@ go build
 
 运行可执行文件
 
-
-
 ## 常用说明
 
 go 项目管理工具：
@@ -91,8 +89,6 @@ go run xxx.go
 go test
 ```
 
-
-
 清除对象
 
 ```
@@ -123,7 +119,7 @@ go get 包
 go install
 ```
 
-使用 module 方式初始化项目,会生成 go.mod 文件
+使用 module 方式初始化项目, 会生成 go.mod 文件
 
 ```
 go mod init 项目名
@@ -137,8 +133,6 @@ go mod init 项目名
 
 1. 需要对外暴露的（public），以大写字母开头
 2. 不需要对外暴露的，以小写字母开头
-
-
 
 #### 包命名
 
@@ -182,7 +176,7 @@ type Reader interface{
 
 #### 变量命名
 
-驼峰命名，首字母根据访问控制大写或小写，如果是 bool 类型，以`Has/has`、`is/Is`、`can/Can`、`Allow/allow`开头
+驼峰命名，首字母根据访问控制大写或小写，如果是 bool 类型，以 `Has/has`、`is/Is`、`can/Can`、`Allow/allow` 开头
 
 ### 单元测试
 
@@ -201,8 +195,8 @@ type Reader interface{
 
 ### 标识符规则
 
-1. 标识符由数字、字母和下划线`_`组成
-2. 只能以字母和下划线`_`开头
+1. 标识符由数字、字母和下划线 `_` 组成
+2. 只能以字母和下划线 `_` 开头
 3. 标识符区分大小写
 
 ### 变量
@@ -218,8 +212,6 @@ var name string
 var age int
 ```
 
-
-
 批量声明
 
 ```go
@@ -229,15 +221,11 @@ var(
 )
 ```
 
-
-
 类型推断根据初始化值省略类型
 
 ```go
 var name = "aaa"
 ```
-
-
 
 短变量声明
 
@@ -247,13 +235,11 @@ var name = "aaa"
 name := "myName"
 ```
 
-
-
 匿名变量
-如果接受到多个变量，有一些变量使用不到，可以用 `_`表示变量名
+如果接受到多个变量，有一些变量使用不到，可以用 `_` 表示变量名
 
 ```go
-func getNameAndAge() (string, int) {
+func getNameAndAge()(string, int) {
 	return "xiaoso", 0
 }
 func main() {
@@ -268,7 +254,7 @@ func main() {
 定义常量
 
 ```go
-const 常量名 [类型 ] = value
+const 常量名 [类型] = value
 ```
 
 ```go
@@ -280,11 +266,9 @@ const (
 const i, j = 1, 2
 ```
 
-
-
 可被编译器修改的常量 `itoa`
 
-默认是 0，每调用一次加 1，遇到 const 关键字被重置为 0，可以使用 `_`跳过某些值，如果遇到其他变量声明，也是跳过某些值
+默认是 0，每调用一次加 1，遇到 const 关键字被重置为 0，可以使用 `_` 跳过某些值，如果遇到其他变量声明，也是跳过某些值
 
 ```go
 const(
@@ -299,45 +283,39 @@ const(
 
 变量类型
 
-| 类型       | 描述                                             |
-| ---------- | ------------------------------------------------ |
-| bool       | 布尔类型，true 或 false                          |
-| string     | 字符串类型，表示一串字符                         |
+| 类型         | 描述                             |
+|------------|--------------------------------|
+| bool       | 布尔类型，true 或 false              |
+| string     | 字符串类型，表示一串字符                   |
 | int        | 有符号整型，表示整数，在 32 位和 64 位系统取对应长度 |
-| uint       | 无符号整型，表示非负整数                         |
-| uintptr    | 无符号整型，用于存储指针地址                     |
-| byte       | 无符号整型，表示字符类型的单个字节，等同于 uint8 |
-| rune       | 整型，表示 Unicode 码点，等同于 int32            |
-| float32    | 单精度浮点数                                     |
-| float64    | 双精度浮点数                                     |
-| complex64  | 包含两个 32 位浮点数的复数类型                   |
-| complex128 | 包含两个 64 位浮点数的复数类型                   |
-| array      | 固定长度数组，包含相同类型的元素                 |
-| slice      | 动态长度数组，可以动态添加元素                   |
-| map        | 键值对集合，用于存储无序数据                     |
-| struct     | 结构体，可以存储不同类型的字段                   |
-| interface  | 接口类型，表示方法的集合                         |
-| func       | 函数类型，可以作为函数参数和返回值类型           |
-| channel    | 通道类型，用于协程间通信                         |
+| uint       | 无符号整型，表示非负整数                   |
+| uintptr    | 无符号整型，用于存储指针地址                 |
+| byte       | 无符号整型，表示字符类型的单个字节，等同于 uint8    |
+| rune       | 整型，表示 Unicode 码点，等同于 int32     |
+| float32    | 单精度浮点数                         |
+| float64    | 双精度浮点数                         |
+| complex64  | 包含两个 32 位浮点数的复数类型              |
+| complex128 | 包含两个 64 位浮点数的复数类型              |
+| array      | 固定长度数组，包含相同类型的元素               |
+| slice      | 动态长度数组，可以动态添加元素                |
+| map        | 键值对集合，用于存储无序数据                 |
+| struct     | 结构体，可以存储不同类型的字段                |
+| interface  | 接口类型，表示方法的集合                   |
+| func       | 函数类型，可以作为函数参数和返回值类型            |
+| channel    | 通道类型，用于协程间通信                   |
 
 注意：uintptr 类型一般不应该直接使用，除非需要和指针相关的操作。在使用指针时，应该优先考虑使用指针类型，而不是 uintptr 类型。
-
-
 
 int 取决于操作系统长度，如果要操作系统无关，可以使用类似如下
 
 + int8、int16、int32、int64
 + uint8、uint16、uint32、uint64
 
-
-
 定义数组
 
 ```go
 a := [3]int {1,2,3}
 ```
-
-
 
 ### 切片
 
@@ -350,8 +328,6 @@ a := []int {1,2,3}
 ```go
 a := make([]int,3)
 ```
-
-
 
 ### Map
 
@@ -384,16 +360,13 @@ func sum(a int,b int)(ret int){
 }
 ```
 
-
-
 变长参数
+
 ```go
 func sum(args ...int){
 
 }
 ```
-
-
 
 函数可以作为一个类型
 
@@ -414,8 +387,6 @@ var f fun = get1
 
 ```
 
-
-
 函数可以作为一个参数
 
 ```go
@@ -431,8 +402,6 @@ func main(){
 }
 ```
 
-
-
 函数可以作为返回值
 
 ```go
@@ -440,8 +409,6 @@ func cal(s string) func(int,int) int{
     // 省略
 }
 ```
-
-
 
 匿名函数
 
@@ -469,7 +436,7 @@ package main
 
 import "fmt"
 
-func add() func(int) int {
+func add()func(int) int {
 	var x int
 	return func(y int) int {
 		x += y
@@ -562,9 +529,8 @@ func main() {
 
 ```
 
-
-
 组合接口
+
 ```go
 type Filyer interface{
     fly()
@@ -612,8 +578,6 @@ go 可以开启一个协程，如果主进程结束，协程也会退出
 go myFunc()
 ```
 
-
-
 channel 用于在 goroutine 之间共享数据
 
 ```go
@@ -636,8 +600,6 @@ data := <- chan1
 data,ok := <- chan1 // 是否读取到值
 
 ```
-
-
 
 close 可以关闭通道，关闭后，读通道，会读取到读默认值
 
@@ -664,7 +626,7 @@ func main() {
 		wg.Add(1) // wg 组 +1
 		go hello(i)
 	}
-	wg.Wait() // 等带所有协程执行完毕,也就是 wg=0 时
+	wg.Wait() // 等带所有协程执行完毕, 也就是 wg=0 时
 }
 
 ```
@@ -675,13 +637,9 @@ func main() {
 runtime.Goshed() // 让出 CPU 时间片，重新等待安排任务
 ```
 
-
-
 ```go
 runtime.Goexit() // 退出当前协程
 ```
-
-
 
 ```go
 runtime.NumCPU() // 查看 cpi 核心数
@@ -699,7 +657,8 @@ lock.Unlock() // 解锁
 
 ### select switch
 
-select 是 Go 中一个控制结构，用于处理异步 IO 操作，select 会监听 case 语句的 channel 读写操作，当 case 中的 channel 读写操作为非阻塞状态时，会触发对应动作
+select 是 Go 中一个控制结构，用于处理异步 IO 操作，select 会监听 case 语句的 channel 读写操作，当 case 中的 channel
+读写操作为非阻塞状态时，会触发对应动作
 
 1. default 总是可运行的
 2. case 语句必须是一个 channel 操作
@@ -731,8 +690,6 @@ fmt.Printf("t2:%v\n", t2)
 <-time.After(time.Second * 1)
 ```
 
-
-
 取消
 
 ```go
@@ -743,10 +700,8 @@ go func(){
     fmt.Println("Timer 1 expired")
 }()
 
-stop := timer1.Stop() // 停止定时器,对应方法不再执行
+stop := timer1.Stop() // 停止定时器, 对应方法不再执行
 ```
-
-
 
 还有 reset 之类的方法
 
@@ -792,18 +747,14 @@ cas
 ok := atomic.CompareAndSwapInt32(&i,100,200)
 ```
 
-
-
 ## 包管理
 
 包管理现在常使用 go module
 
-
-
 初始化模块
 
 ```go
-go mod init <项目模块名>
+go mod init < 项目模块名 >
 go mod init xiaoso/testmod
 ```
 
@@ -836,8 +787,6 @@ go list -m -json all
 ```go
 go mod download [path@version]
 ```
-
-
 
 ## 参考
 

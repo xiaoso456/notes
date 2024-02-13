@@ -2,29 +2,25 @@
 
 [官方文档](https://sentinelguard.io/zh-cn/docs/introduction.html)
 
-Sentinel提供流量控制、熔断降级、系统负载保护等，可用于监控、限流、熔断等操作。
-
-
+Sentinel 提供流量控制、熔断降级、系统负载保护等，可用于监控、限流、熔断等操作。
 
 功能：流量控制、熔断降级、系统负载保护
 
-
-
 Sentinel 和 Hystrix 对比
 
-| Sentinel       | Hystrix                                        |                               |
-| -------------- | ---------------------------------------------- | ----------------------------- |
-| 隔离策略       | 信号量隔离                                     | 线程池隔离/信号量隔离         |
-| 熔断降级策略   | 基于响应时间或失败比率                         | 基于失败比率                  |
-| 实时指标实现   | 滑动窗口                                       | 滑动窗口（基于 RxJava）       |
-| 规则配置       | 支持多种数据源                                 | 支持多种数据源                |
-| 扩展性         | 多个扩展点                                     | 插件的形式                    |
-| 基于注解的支持 | 支持                                           | 支持                          |
-| 限流           | 基于 QPS，支持基于调用关系的限流               | 有限的支持                    |
-| 流量整形       | 支持慢启动、匀速器模式                         | 不支持                        |
-| 系统负载保护   | 支持                                           | 不支持                        |
-| 控制台         | 开箱即用，可配置规则、查看秒级监控、机器发现等 | 不完善                        |
-| 常见框架的适配 | Servlet、Spring Cloud、Dubbo、gRPC 等          | Servlet、Spring Cloud Netflix |
+| Sentinel | Hystrix                           |                              |
+|----------|-----------------------------------|------------------------------|
+| 隔离策略     | 信号量隔离                             | 线程池隔离 / 信号量隔离                |
+| 熔断降级策略   | 基于响应时间或失败比率                       | 基于失败比率                       |
+| 实时指标实现   | 滑动窗口                              | 滑动窗口（基于 RxJava）              |
+| 规则配置     | 支持多种数据源                           | 支持多种数据源                      |
+| 扩展性      | 多个扩展点                             | 插件的形式                        |
+| 基于注解的支持  | 支持                                | 支持                           |
+| 限流       | 基于 QPS，支持基于调用关系的限流                | 有限的支持                        |
+| 流量整形     | 支持慢启动、匀速器模式                       | 不支持                          |
+| 系统负载保护   | 支持                                | 不支持                          |
+| 控制台      | 开箱即用，可配置规则、查看秒级监控、机器发现等           | 不完善                          |
+| 常见框架的适配  | Servlet、Spring Cloud、Dubbo、gRPC 等 | Servlet、Spring Cloud Netflix |
 
 ## 术语
 
@@ -46,8 +42,6 @@ Sentinel 和 Hystrix 对比
     <version>1.8.6</version>
 </dependency>
 ```
-
-
 
 1. 定义资源 `HelloWorld`
 
@@ -76,7 +70,7 @@ public static void initRule(){
 }
 ```
 
-3. 每500ms调用一次 HelloWorld 资源，观察输出
+3. 每 500ms 调用一次 HelloWorld 资源，观察输出
 
 ```java
     public static void main(String[] args) throws InterruptedException {
@@ -96,8 +90,6 @@ com.alibaba.csp.sentinel.slots.block.flow.FlowException
 get:hello
 com.alibaba.csp.sentinel.slots.block.flow.FlowException
 ```
-
-
 
 ## 使用
 
